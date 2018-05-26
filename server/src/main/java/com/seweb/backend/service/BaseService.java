@@ -1,7 +1,7 @@
-package com.seweb.backend.base;
+package com.seweb.backend.service;
 
-import com.seweb.backend.base.*;
-
+import com.seweb.backend.domain.BaseEntity;
+import com.seweb.backend.repository.BaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

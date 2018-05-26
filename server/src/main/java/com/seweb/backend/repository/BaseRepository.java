@@ -1,6 +1,6 @@
-package com.seweb.backend.base;
+package com.seweb.backend.repository;
 
-import com.seweb.backend.base.BaseEntity;
+import com.seweb.backend.domain.BaseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.seweb.backend.base;
+package com.seweb.backend.domain;
 
 import com.alibaba.fastjson.JSON;
 
