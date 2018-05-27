@@ -4,6 +4,7 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class Text extends BaseEntity{
+
     private String content;
 
     public String getContent() {
