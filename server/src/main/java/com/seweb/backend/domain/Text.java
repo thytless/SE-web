@@ -1,8 +1,6 @@
 package com.seweb.backend.domain;
 
-
-public class TextEntity extends BaseEntity {
-
+public class Text {
     private String content;
 
     public String getContent() {
