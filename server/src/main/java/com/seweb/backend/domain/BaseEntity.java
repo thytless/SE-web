@@ -8,25 +8,22 @@ import javax.persistence.*;
 public class BaseEntity {
 
     @Id
-    @Column(name = "ID")
     private String id;
 
-    @Column(name = "CODE")
     private String code;
 
-    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "CREATED_TIME")
+    @Column(name = "created_time")
     private String createdTime;
 
-    @Column(name = "CREATED_USER_ID")
+    @Column(name = "created_user_id")
     private String createdUserId;
 
-    @Column(name = "ALTERED_TIME")
+    @Column(name = "altered_time")
     private String alteredTime;
 
-    @Column(name = "ALTERED_USER_ID")
+    @Column(name = "altered_user_id")
     private String alteredUserId;
 
     public String getId() {
