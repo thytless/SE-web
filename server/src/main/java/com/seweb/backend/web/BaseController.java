@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 @RequestMapping("/services")
-public class BaseController {
+public class BaseController
+{
     @Deprecated
     public HashMap<String, Object> processMultipartRequest(MultipartHttpServletRequest request)
     {

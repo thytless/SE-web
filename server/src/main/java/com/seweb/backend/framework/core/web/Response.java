@@ -1,4 +1,4 @@
-package com.sinosteel.framework.core.web;
+package com.seweb.backend.framework.core.web;
 
 import com.alibaba.fastjson.JSON;
 
