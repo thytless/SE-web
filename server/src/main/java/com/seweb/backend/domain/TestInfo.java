@@ -8,6 +8,9 @@ import javax.persistence.Table;
 public class TestInfo extends Text{
     private String type;
 
+
+
+
     public TestInfo() {
     }
 
