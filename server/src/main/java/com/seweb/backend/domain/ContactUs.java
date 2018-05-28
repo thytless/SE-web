@@ -5,6 +5,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tbl_contactus")
-public class ContactUs extends Text {
+public class ContactUs extends BaseEntity {
 
 }

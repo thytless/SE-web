@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class NewsController extends TextController{
+public class NewsController extends BaseController{
 
     @Autowired
     private NewsService newsService;

@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class NewsService extends TextService {
+@Service
+public class NewsService extends BaseService {
 
     @Autowired
     private NewsRepository newsRepository;

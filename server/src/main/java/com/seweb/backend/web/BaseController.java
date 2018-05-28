@@ -1,4 +1,4 @@
-package com.seweb.backend.base;
+package com.seweb.backend.web;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
