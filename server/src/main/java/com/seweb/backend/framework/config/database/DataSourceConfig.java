@@ -7,4 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("datasource.properties")
 @ConfigurationProperties(prefix = "spring.datasource")
-public class DataSourceConfig { }
+public class DataSourceConfig {
+
+}

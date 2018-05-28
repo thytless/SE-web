@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "contactus")
+@Table(name = "tbl_contactus")
 public class ContactUs extends Text {
 
 }
