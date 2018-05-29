@@ -15,16 +15,16 @@ public class AuthController extends BaseController {
     //private static Logger logger = Logger.getLogger(AuthController.class);
 
     @Autowired
-    private UserService userService;
+    private StaffService staffService;
 
-    @RequestMapping(value = "/login")
-    public Response login(Request request)
+    @RequestMapping(value = "/stafflogin")
+    public Response staffLogin(Request request)
     {
         Response response = new Response();
 
         try
         {
-            User user = userService.getLoginUser(request.getParams());
+            User user = staffService.getLoginUser(request.getParams());
             JSONObject userJson = JSONObject.parseObject(JSONObject.toJSONString(user));
             //user中没有modules信息，但前端需要，故这里将该用户可以管理的modules发给前端，
             //前端根据这些modules决定侧边栏显示哪些modules

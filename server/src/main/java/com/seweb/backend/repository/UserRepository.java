@@ -4,7 +4,7 @@ import com.seweb.backend.domain.User;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface UserRepository extends BaseRepository<User> {
+public interface UserRepository<T extends User> extends BaseRepository<T> {
 
     User findByUsername(String username);
 }

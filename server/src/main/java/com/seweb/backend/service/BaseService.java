@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor={Exception.class, RuntimeException.class})
 public class BaseService<T extends BaseEntity>

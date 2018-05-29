@@ -6,20 +6,21 @@ import com.seweb.backend.framework.utils.encryption.MD5Util;
 import com.seweb.backend.framework.utils.string.StringUtil;
 import com.seweb.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-public class UserService extends BaseService<User> {
+public class UserService<T extends User> extends BaseService<T> {
 
-    public UserRepository userRepository;
+    public UserRepository<T> userRepository;
 
     @Autowired
+    public void setUserRepository(UserRepository<T> userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public User getUserByUsername(String username)
     {
         return userRepository.findByUsername(username);
     }
 
-    @Autowired
     public User getLoginUser(JSONObject params) throws Exception
     {
         String userName = params.getString("username");
