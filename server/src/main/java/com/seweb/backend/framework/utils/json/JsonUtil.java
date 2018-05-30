@@ -1,4 +1,4 @@
-package com.sinosteel.framework.utils.json;
+package com.seweb.backend.framework.utils.json;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -94,3 +94,4 @@ public class JsonUtil
         return jsonString;
     }
 }
+

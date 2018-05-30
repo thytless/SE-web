@@ -1,4 +1,4 @@
-package com.sinosteel.framework.utils.date;
+package com.seweb.backend.framework.utils.date;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import com.sinosteel.framework.utils.string.StringUtil;
+import com.seweb.backend.framework.utils.string.StringUtil;
 
 /**
  * 日期工具类

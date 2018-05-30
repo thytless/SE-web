@@ -1,4 +1,4 @@
-package com.sinosteel.framework.utils.map;
+package com.seweb.backend.framework.utils.map;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,3 +25,4 @@ public class MapUtil
 		return reversedMap;
 	}
 }
+

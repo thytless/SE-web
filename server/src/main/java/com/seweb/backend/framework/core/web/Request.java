@@ -1,8 +1,8 @@
-package com.sinosteel.framework.core.web;
+package com.seweb.backend.framework.core.web;
 
 import java.util.List;
 
-import com.sinosteel.domain.User;
+import com.seweb.backend.domain.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
@@ -89,3 +89,4 @@ public class Request
 		this.user = user;
 	}
 }
+
