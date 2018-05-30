@@ -7,3 +7,4 @@ public class StringUtil
 		return s == null || "".equals(s);
 	}
 }
+
