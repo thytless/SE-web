@@ -1,5 +1,6 @@
 package com.seweb.backend.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.About;
@@ -25,13 +26,11 @@ public class AboutService extends TextService<About>{
         if(aboutList.size() == 0){
             throw new Exception("No enabled ABOUT.");
         }
-        
-        JSONArray aboutJsonArray = JsonUtil.toJSONArray(aboutList);
-        JSONObject aboutJsonObject = aboutJsonArray.getJSONObject(0);
 
+        JSONObject aboutJsonObject = JSON.parseObject(JSON.toJSONString(aboutList.get(0)));
         JSONObject resultJson = new JSONObject();
 
-        resultJson.put("total", aboutJsonArray.size());
+        resultJson.put("total", aboutList.size());
         resultJson.put("data", aboutJsonObject);
 
         return resultJson;
