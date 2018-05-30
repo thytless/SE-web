@@ -1,4 +1,4 @@
-package com.seweb.backend.framework.utils.string;
+package com.sinosteel.framework.utils.string;
 
 public class StringUtil 
 {
@@ -7,4 +7,3 @@ public class StringUtil
 		return s == null || "".equals(s);
 	}
 }
-

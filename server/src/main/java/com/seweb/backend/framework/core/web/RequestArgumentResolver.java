@@ -1,10 +1,10 @@
-package com.seweb.backend.framework.core.web;
+package com.sinosteel.framework.core.web;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.seweb.backend.domain.User;
+import com.sinosteel.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -15,9 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
-import com.seweb.backend.service.UserService;
-import com.seweb.backend.framework.utils.date.DateUtil;
-import com.seweb.backend.framework.utils.string.StringUtil;
+import com.sinosteel.service.UserService;
+import com.sinosteel.framework.utils.date.DateUtil;
+import com.sinosteel.framework.utils.string.StringUtil;
 
 public class RequestArgumentResolver implements HandlerMethodArgumentResolver 
 {
@@ -59,5 +59,4 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 
         return request;
     }
-
 }

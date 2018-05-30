@@ -1,4 +1,4 @@
-package com.seweb.backend.framework.helpers.pagination;
+package com.sinosteel.framework.helpers.pagination;
 
 import java.io.Serializable;
 

@@ -1,9 +1,9 @@
-package com.seweb.backend.framework.helpers.pagination;
+package com.sinosteel.framework.helpers.pagination;
 
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
-import com.seweb.backend.framework.utils.json.JsonUtil;
+import com.sinosteel.framework.utils.json.JsonUtil;
 
 public class PageResult<T>
 {

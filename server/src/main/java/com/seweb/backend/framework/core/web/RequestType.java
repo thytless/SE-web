@@ -1,4 +1,4 @@
-package com.seweb.backend.framework.core.web;
+package com.sinosteel.framework.core.web;
 
 public enum RequestType
 {
@@ -7,4 +7,3 @@ public enum RequestType
 	UPDATE,
 	QUERY
 }
-

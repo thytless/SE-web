@@ -1,4 +1,4 @@
-package com.seweb.backend.framework.utils.encryption;
+package com.sinosteel.framework.utils.encryption;
 
 import java.security.MessageDigest;
 

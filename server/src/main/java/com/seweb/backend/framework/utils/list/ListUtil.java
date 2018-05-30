@@ -1,4 +1,4 @@
-package com.seweb.backend.framework.utils.list;
+package com.sinosteel.framework.utils.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,4 +48,3 @@ public class ListUtil
 		return difference;
 	}
 }
-
