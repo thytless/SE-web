@@ -14,6 +14,9 @@ public class BaseEntity {
 
     private String name;
 
+    @Column(name = "content")
+    private  String content;
+
     @Column(name = "created_time")
     private String createdTime;
 
