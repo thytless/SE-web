@@ -18,20 +18,25 @@ public class AboutService extends TextService<About>{
     private AboutRepository aboutRepository;
 
     public JSONObject getLatestEnabledAbout() throws Exception{
-        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM tbl_text_about ");
-        sqlBuilder.append("WHERE enabled = 1 ");
-        sqlBuilder.append("ORDER BY altered_time DESC LIMIT 0,1");
+        StringBuilder hqlBuilder = new StringBuilder("FROM About about ");
+        hqlBuilder.append("WHERE about.enabled = 1 ");
+        hqlBuilder.append("ORDER BY alteredTime DESC");
 
-        List<About> aboutList = aboutRepository.executeSql(sqlBuilder.toString(),null);
+        List<About> aboutList = aboutRepository.executeHql(hqlBuilder.toString(),null);
         if(aboutList.size() == 0){
             throw new Exception("No enabled ABOUT.");
         }
 
-        JSONObject aboutJsonObject = JSON.parseObject(JSON.toJSONString(aboutList.get(0)));
+        About about = (About)(aboutList.toArray()[0]);
+        //String about = aboutList.toString();
+
+        JSONObject aboutJsonObject = JSON.parseObject(JSON.toJSONString(about));
+
         JSONObject resultJson = new JSONObject();
 
         resultJson.put("total", aboutList.size());
         resultJson.put("data", aboutJsonObject);
+        //resultJson.put("data", about);
 
         return resultJson;
     }
