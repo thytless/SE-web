@@ -1,10 +1,8 @@
 package com.seweb.backend.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.About;
-import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.repository.AboutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +25,8 @@ public class AboutService extends TextService<About>{
             throw new Exception("No enabled ABOUT.");
         }
 
+        //index Object Array to get About Object
         About about = (About)(aboutList.toArray()[0]);
-        //String about = aboutList.toString();
 
         JSONObject aboutJsonObject = JSON.parseObject(JSON.toJSONString(about));
 
@@ -36,7 +34,6 @@ public class AboutService extends TextService<About>{
 
         resultJson.put("total", aboutList.size());
         resultJson.put("data", aboutJsonObject);
-        //resultJson.put("data", about);
 
         return resultJson;
     }

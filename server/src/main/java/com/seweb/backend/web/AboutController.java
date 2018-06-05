@@ -15,7 +15,7 @@ public class AboutController extends TextController{
     private AboutService aboutService;
 
     @RequestMapping(value = "/about")
-    public Response queryAllNews(Request request)
+    public Response queryLatestEnabledAbout(Request request)
     {
         Response response = new Response();
 

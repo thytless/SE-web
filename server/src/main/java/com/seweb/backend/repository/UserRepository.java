@@ -6,5 +6,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface UserRepository<T extends User> extends BaseRepository<T> {
 
-    User findByUsername(String username);
+    T findByUsername(String username);
 }
