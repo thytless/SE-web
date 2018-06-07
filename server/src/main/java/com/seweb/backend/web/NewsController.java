@@ -77,4 +77,42 @@ public class NewsController extends TextController{
 
         return response;
     }
+
+    @RequestMapping(value = "/deleteNews")
+    public Response deleteNews(Request request) {
+        Response response = new Response();
+        try {
+            newsService.deleteNews(request.getParams());
+            response.status = ResponseType.SUCCESS;
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "editNews")
+    public Response editNews(Request request) {
+        Response response = new Response();
+        try {
+            newsService.editNews(request.getParams());
+            response.status = ResponseType.SUCCESS;
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
 }
