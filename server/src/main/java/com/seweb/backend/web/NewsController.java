@@ -34,8 +34,8 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/querynews")
-    public Response queryNewsById(Request request){
+    @RequestMapping(value = "/queryNews")
+    public Response queryNews(Request request){
         Response response = new Response();
 
         try
@@ -56,4 +56,63 @@ public class NewsController extends TextController{
         return response;
     }
 
+    @RequestMapping(value = "/addNews")
+    public Response addNews(Request request) {
+        Response response = new Response();
+
+        try {
+            newsService.addNews(request.getParams());
+            response.status = ResponseType.SUCCESS;
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/deleteNews")
+    public Response deleteNews(Request request) {
+        Response response = new Response();
+        try {
+            newsService.deleteNews(request.getParams());
+            response.status = ResponseType.SUCCESS;
+            response.data = newsService.queryNewsById(request.getParams());
+            response.message = "";
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/editNews")
+    public Response editNews(Request request) {
+        Response response = new Response();
+        try {
+            newsService.editNews(request.getParams());
+            response.status = ResponseType.SUCCESS;
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
 }
