@@ -18,16 +18,11 @@ public class NewsService extends BaseService<News> {
     @Autowired
     private NewsRepository newsRepository;
 
-    public JSONArray queryAllNews(){
-        List<News> news = newsRepository.findAll();
-        JSONArray jsonArray = JsonUtil.toJSONArray(news);
-        return jsonArray;
-    }
+    public JSONArray queryAllNews(){ return JsonUtil.toJSONArray(newsRepository.findAll()); }
 
-    public JSONObject queryNews(JSONObject params) {
-        String id=(String)params.getString("id");
-        System.out.println(id);
-        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
-        return jsonObject;
+    public JSONObject queryNewsById(JSONObject params) {
+        String id = params.getString("id");
+        //System.out.println(id);
+        return JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
     }
 }

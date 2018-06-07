@@ -1,9 +1,8 @@
 package com.seweb.backend.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "tbl_policy")
+@Table(name = "tbl_text_policy")
 public class Policy extends Text{
 }

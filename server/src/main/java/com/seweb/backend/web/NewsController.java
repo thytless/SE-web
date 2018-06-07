@@ -3,11 +3,9 @@ package com.seweb.backend.web;
 import com.seweb.backend.framework.core.web.*;
 import com.seweb.backend.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin
 @RestController
 public class NewsController extends TextController{
 
@@ -35,36 +33,15 @@ public class NewsController extends TextController{
 
         return response;
     }
-    @RequestMapping(value = "/querynews", method = RequestMethod.POST)
-    public Response queryNews(Request request)
-    {
-        Response response = new Response();
-
-        try
-        {
-            response.status = ResponseType.SUCCESS;
-            response.data = newsService.queryNews(request.getParams());
-            response.message = "";
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-
-            response.status = ResponseType.FAILURE;
-            response.message = e.getMessage();
-        }
-
-        return response;
-    }
 
     @RequestMapping(value = "/querynews")
-    public Response queryNews(Request request){
+    public Response queryNewsById(Request request){
         Response response = new Response();
 
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = newsService.queryNews(request.getParams());
+            response.data = newsService.queryNewsById(request.getParams());
             response.message = "";
 
         }

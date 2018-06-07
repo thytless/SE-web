@@ -2,12 +2,10 @@ package com.seweb.backend.web;
 
 import com.seweb.backend.framework.core.web.*;
 import com.seweb.backend.service.AboutService;
-import com.seweb.backend.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin
 @RestController
 public class AboutController extends TextController{
 
@@ -15,7 +13,7 @@ public class AboutController extends TextController{
     private AboutService aboutService;
 
     @RequestMapping(value = "/about")
-    public Response queryAllNews(Request request)
+    public Response queryLatestEnabledAbout(Request request)
     {
         Response response = new Response();
 
