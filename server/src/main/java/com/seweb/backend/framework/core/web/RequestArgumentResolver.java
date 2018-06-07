@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.seweb.backend.domain.User;
+import com.seweb.backend.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -22,7 +23,7 @@ import com.seweb.backend.framework.utils.string.StringUtil;
 public class RequestArgumentResolver implements HandlerMethodArgumentResolver 
 {
 	@Autowired
-	private UserService userService;
+	private StaffService userService;
 	
     @Override
     public boolean supportsParameter(MethodParameter methodParameter)

@@ -35,4 +35,26 @@ public class NewsController extends TextController{
         return response;
     }
 
+    @RequestMapping(value = "/querynews")
+    public Response queryNews(Request request){
+        Response response = new Response();
+
+        try
+        {
+            response.status = ResponseType.SUCCESS;
+            response.data = newsService.queryNews(request.getParams());
+            response.message = "";
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
 }
