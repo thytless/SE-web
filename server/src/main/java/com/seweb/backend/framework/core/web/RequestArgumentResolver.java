@@ -42,27 +42,25 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
     	//通过请求中的参数username设置request的user&userType
     	String username = webRequest.getParameter("username");
 
-
 		/* MODIFIED BEGIN*/
 
-    	Staff staff = staffService.getUserByUsername(username);
-    	if(staff == null) {
-    		Client client = clientService.getUserByUsername(username);
-    		if(client == null){
-    			throw new Exception("Username not exist");
+		if(username != null) {
+			Staff staff = staffService.getUserByUsername(username);
+			if (staff == null) {
+				Client client = clientService.getUserByUsername(username);
+				if (client == null) {
+					throw new Exception("Username not exist");
+				}
+				request.setUserType(UserType.CLIENT);
+				request.setUser(client);
+			} else if (staff.getAdmin() == 1) {
+				request.setUserType(UserType.ADMIN);
+				request.setUser(staff);
+			} else {
+				request.setUserType(UserType.STAFF);
+				request.setUser(staff);
 			}
-    		request.setUserType(UserType.CLIENT);
-    		request.setUser(client);
 		}
-		else if(staff.getAdmin() == 1) {
-    		request.setUserType(UserType.ADMIN);
-			request.setUser(staff);
-		}
-		else {
-    		request.setUserType(UserType.STAFF);
-			request.setUser(staff);
-		}
-
 
 
     	/* END */
