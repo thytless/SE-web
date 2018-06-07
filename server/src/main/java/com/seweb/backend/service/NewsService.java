@@ -30,4 +30,9 @@ public class NewsService extends BaseService<News> {
         JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
         return jsonObject;
     }
+
+    public void addNews(JSONObject params) {
+        News news = JSONObject.toJavaObject(params, News.class);
+        //this.save
+    }
 }
