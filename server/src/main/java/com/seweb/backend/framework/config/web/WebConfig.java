@@ -13,8 +13,6 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.seweb.backend.framework.core.web.RequestArgumentResolver;
 
-/*
-
 
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter
@@ -45,4 +43,4 @@ public class WebConfig extends WebMvcConfigurerAdapter
         converters.add(fastConverter);
 	}
 }
-*/
+

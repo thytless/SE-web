@@ -25,9 +25,9 @@ public class NewsService extends BaseService<News> {
     }
 
     public JSONObject queryNews(JSONObject params) {
-        System.out.println(params);
-        String id=params.getString("id");
-        return JSONObject.parseObject(JSON.toJSONString(newsRepository.findById(id)));
+        String id=(String)params.getString("id");
+        System.out.println(id);
+        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
+        return jsonObject;
     }
-
 }

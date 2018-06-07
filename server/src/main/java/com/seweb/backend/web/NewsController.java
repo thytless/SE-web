@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class NewsController extends BaseController{
+public class NewsController extends TextController{
 
     @Autowired
     private NewsService newsService;
@@ -45,6 +45,28 @@ public class NewsController extends BaseController{
             response.status = ResponseType.SUCCESS;
             response.data = newsService.queryNews(request.getParams());
             response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/querynews")
+    public Response queryNews(Request request){
+        Response response = new Response();
+
+        try
+        {
+            response.status = ResponseType.SUCCESS;
+            response.data = newsService.queryNews(request.getParams());
+            response.message = "";
+
         }
         catch(Exception e)
         {

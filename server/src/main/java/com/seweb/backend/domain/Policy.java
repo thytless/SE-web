@@ -5,5 +5,5 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tbl_policy")
-public class Policy extends BaseEntity{
+public class Policy extends Text{
 }

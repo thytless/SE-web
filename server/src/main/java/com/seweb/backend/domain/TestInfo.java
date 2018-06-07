@@ -5,14 +5,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tbl_testinfo")
-public class TestInfo extends BaseEntity{
+public class TestInfo extends Text{
     private String type;
-
-
-
-
-    public TestInfo() {
-    }
 
     public String getType() {
         return type;

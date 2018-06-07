@@ -5,8 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tbl_news")
-public class News extends BaseEntity{
-    @Column(name = "content")
-    private  String content;
+@Table(name = "tbl_text_news")
+public class News extends Text{
+
 }
