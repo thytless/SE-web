@@ -13,7 +13,7 @@ public class Request
 	private User user;
 
 	private UserType userType;
-	
+
 	private String uri;
 	
 	private String client;

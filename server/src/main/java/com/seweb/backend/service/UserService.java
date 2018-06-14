@@ -1,11 +1,14 @@
 package com.seweb.backend.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.encryption.MD5Util;
 import com.seweb.backend.framework.utils.string.StringUtil;
 import com.seweb.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.UUID;
 
 public class UserService<T extends User> extends BaseService<T> {
 
@@ -49,4 +52,15 @@ public class UserService<T extends User> extends BaseService<T> {
 
         return user;
     }
+
+    public void register(JSONObject params) throws Exception{
+        T user = toObject(params);
+        user.setId(UUID.randomUUID().toString());
+
+        /* TODO: Add User Status & Verification */
+
+        this.saveEntity(user);
+    }
+
+    public T toObject(JSONObject params){return null;}
 }
