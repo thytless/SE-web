@@ -1,10 +1,9 @@
 package com.seweb.backend.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "tbl_contactus")
+@Table(name = "tbl_text_contactus")
 public class ContactUs extends Text {
 
 }

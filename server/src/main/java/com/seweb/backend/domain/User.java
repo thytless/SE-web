@@ -10,6 +10,26 @@ public class User extends BaseEntity
 
 	private String password;
 
+	private String truename;
+
+	private String identification;
+
+	public String getTruename() {
+		return truename;
+	}
+
+	public void setTruename(String truename) {
+		this.truename = truename;
+	}
+
+	public String getIdentification() {
+		return identification;
+	}
+
+	public void setIdentification(String identification) {
+		this.identification = identification;
+	}
+
 	public String getUsername() {
 		return username;
 	}

@@ -1,10 +1,8 @@
 package com.seweb.backend.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.About;
-import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.repository.AboutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,16 +16,20 @@ public class AboutService extends TextService<About>{
     private AboutRepository aboutRepository;
 
     public JSONObject getLatestEnabledAbout() throws Exception{
-        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM tbl_text_about ");
-        sqlBuilder.append("WHERE enabled = 1 ");
-        sqlBuilder.append("ORDER BY altered_time DESC LIMIT 0,1");
+        StringBuilder hqlBuilder = new StringBuilder("FROM About about ");
+        hqlBuilder.append("WHERE about.enabled = 1 ");
+        hqlBuilder.append("ORDER BY alteredTime DESC");
 
-        List<About> aboutList = aboutRepository.executeSql(sqlBuilder.toString(),null);
+        List<About> aboutList = aboutRepository.executeHql(hqlBuilder.toString(),null);
         if(aboutList.size() == 0){
             throw new Exception("No enabled ABOUT.");
         }
 
-        JSONObject aboutJsonObject = JSON.parseObject(JSON.toJSONString(aboutList.get(0)));
+        //index Object Array to get About Object
+        About about = (About)(aboutList.toArray()[0]);
+
+        JSONObject aboutJsonObject = JSON.parseObject(JSON.toJSONString(about));
+
         JSONObject resultJson = new JSONObject();
 
         resultJson.put("total", aboutList.size());

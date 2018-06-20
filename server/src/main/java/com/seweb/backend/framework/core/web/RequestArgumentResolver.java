@@ -1,10 +1,10 @@
 package com.seweb.backend.framework.core.web;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import com.seweb.backend.domain.User;
+import com.seweb.backend.domain.Client;
+import com.seweb.backend.domain.Staff;
+import com.seweb.backend.domain.type.UserType;
 import com.seweb.backend.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -12,18 +12,18 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
-import com.seweb.backend.service.UserService;
+import com.seweb.backend.service.*;
 import com.seweb.backend.framework.utils.date.DateUtil;
-import com.seweb.backend.framework.utils.string.StringUtil;
 
 public class RequestArgumentResolver implements HandlerMethodArgumentResolver 
 {
 	@Autowired
-	private StaffService userService;
+	private StaffService staffService;
+
+	@Autowired
+	private ClientService clientService;
 	
     @Override
     public boolean supportsParameter(MethodParameter methodParameter)
@@ -39,11 +39,32 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
     {
     	Request request = new Request();
 
-    	//通过请求中的参数username设置request的user
+    	//通过请求中的参数username设置request的user&userType
     	String username = webRequest.getParameter("username");
-    	User user = userService.getUserByUsername(username);
-    	request.setUser(user);
-    	
+
+		/* MODIFIED BEGIN*/
+
+		if(username != null) {
+			Staff staff = staffService.getUserByUsername(username);
+			if (staff == null) {
+				Client client = clientService.getUserByUsername(username);
+				if (client == null) {
+					throw new Exception("Username not exist");
+				}
+				request.setUserType(UserType.CLIENT);
+				request.setUser(client);
+			} else if (staff.getAdmin() == 1) {
+				request.setUserType(UserType.ADMIN);
+				request.setUser(staff);
+			} else {
+				request.setUserType(UserType.STAFF);
+				request.setUser(staff);
+			}
+		}
+
+
+    	/* END */
+
     	String[] descriptions = webRequest.getDescription(true).split(";");
     	String uri = descriptions[0].split("=")[1];
     	String client = descriptions[1].split("=")[1];

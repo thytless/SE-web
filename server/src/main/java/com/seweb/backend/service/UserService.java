@@ -16,12 +16,12 @@ public class UserService<T extends User> extends BaseService<T> {
         this.userRepository = userRepository;
     }
 
-    public User getUserByUsername(String username)
+    public T getUserByUsername(String username)
     {
         return userRepository.findByUsername(username);
     }
 
-    public User getLoginUser(JSONObject params) throws Exception
+    public T getLoginUser(JSONObject params) throws Exception
     {
         String userName = params.getString("username");
         if(StringUtil.isEmpty(userName))
@@ -35,14 +35,14 @@ public class UserService<T extends User> extends BaseService<T> {
             throw new Exception("empty password");
         }
 
-        User user = userRepository.findByUsername(userName);
+        T user = userRepository.findByUsername(userName);
         if(user == null)
         {
             throw new Exception("no such user");
         }
 
-        String encrptedPassword = MD5Util.encrypt(password);
-        if(!encrptedPassword.equals(user.getPassword()))
+        String encryptedPassword = MD5Util.encrypt(password);
+        if(!encryptedPassword.equals(user.getPassword()))
         {
             throw new Exception("incorrect password");
         }
