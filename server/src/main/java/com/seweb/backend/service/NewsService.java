@@ -19,26 +19,33 @@ public class NewsService extends BaseService<News> {
     @Autowired
     private NewsRepository newsRepository;
 
-    public JSONArray queryAllNews(){ return JsonUtil.toJSONArray(newsRepository.findAll()); }
+    public JSONArray queryAllNews(){
+        //一键查询，返回所有
+        return JsonUtil.toJSONArray(newsRepository.findAll());
+    }
+
 
     public JSONObject queryNewsById(JSONObject params) {
+        //根据id查询
         String id = params.getString("id");
-        //System.out.println(id);
         return JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
     }
 
     public void addNews(JSONObject params) {
+        //params包括name、content
         News news = JSONObject.toJavaObject(params, News.class);
         news.setId(UUID.randomUUID().toString());
         this.saveEntity(news);
     }
 
     public void deleteNews(JSONObject params) {
+        //根据id删除
         String id = params.getString("id");
         this.deleteEntity(id);
     }
 
     public void editNews(JSONObject params) {
+        //params包括id、name、content其中，以id为主
         News news = JSONObject.toJavaObject(params, News.class);
         this.updateEntity(news);
     }
