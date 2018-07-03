@@ -47,24 +47,34 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 
 		System.out.println("isRegister: "+isRegister);
 
-		/* MODIFIED BEGIN*/
+		/* MODIFIED BEGIN */
 
-		if(username != null && isRegister.equals("false")) {
-			Staff staff = staffService.getUserByUsername(username);
-			if (staff == null) {
-				Client client = clientService.getUserByUsername(username);
-				if (client == null) {
-					throw new Exception("Username:" + username + " not exist");
+		if(username != null) {
+
+			/* not registration & username not found*/
+			if(isRegister.equals("false")) {
+				Staff staff = staffService.getUserByUsername(username);
+				if (staff == null) {
+					Client client = clientService.getUserByUsername(username);
+					if (client == null) {
+						throw new Exception("Username:" + username + " not exist!");
+					}
+					request.setUserType(UserType.CLIENT);
+					request.setUser(client);
+				} else if (staff.getAdmin() == 1) {
+					request.setUserType(UserType.ADMIN);
+					request.setUser(staff);
+				} else {
+					request.setUserType(UserType.STAFF);
+					request.setUser(staff);
 				}
-				request.setUserType(UserType.CLIENT);
-				request.setUser(client);
-			} else if (staff.getAdmin() == 1) {
-				request.setUserType(UserType.ADMIN);
-				request.setUser(staff);
-			} else {
-				request.setUserType(UserType.STAFF);
-				request.setUser(staff);
 			}
+
+			/* username duplication */
+			else if(staffService.getUserByUsername(username) != null || clientService.getUserByUsername(username) != null){
+				throw new Exception("Username:" + username + " exists!");
+			}
+
 		}
 
 

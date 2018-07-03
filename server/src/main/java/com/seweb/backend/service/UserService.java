@@ -54,6 +54,7 @@ public class UserService<T extends User> extends BaseService<T> {
     }
 
     public void register(JSONObject params) throws Exception{
+
         T user = toObject(params);
         user.setId(UUID.randomUUID().toString());
 
