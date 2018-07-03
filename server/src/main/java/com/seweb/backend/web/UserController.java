@@ -28,12 +28,19 @@ public class UserController extends BaseController{
         try
         {
             response.status = ResponseType.SUCCESS;
-            if(request.getParams().getString("regType") == "CLIENT"){
+
+            /* Now staff registration only. */
+
+            staffService.register(request.getParams());
+
+            /*
+            if(request.getParams().getString("isStaffReg") == "false"){
                 clientService.register(request.getParams());
             }
             else{
                 staffService.register(request.getParams());
             }
+            */
             response.message = "";
         }
         catch(Exception e)
