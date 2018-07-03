@@ -14,6 +14,26 @@ public class User extends BaseEntity
 
 	private String identification;
 
+	private String phonenumber;
+
+	private String email;
+
+	public String getPhonenumber() {
+		return phonenumber;
+	}
+
+	public void setPhonenumber(String phonenumber) {
+		this.phonenumber = phonenumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getTruename() {
 		return truename;
 	}
