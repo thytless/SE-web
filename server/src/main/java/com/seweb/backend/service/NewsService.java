@@ -9,6 +9,7 @@ import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.awt.geom.AreaOp;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +47,15 @@ public class NewsService extends BaseService<News> {
 
     public void editNews(JSONObject params) {
         //params包括id、name、content其中，以id为主
-        News news = JSONObject.toJavaObject(params, News.class);
-        this.updateEntity(news);
+        //其他消息会被置为null
+        String id = params.getString("id");
+        String name=params.getString("name");
+        String content=params.getString("content");
+
+        JSONObject tp=JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
+        News news = JSONObject.toJavaObject(tp, News.class);
+        news.setName(name);
+        news.setContent(content);
+
     }
 }
