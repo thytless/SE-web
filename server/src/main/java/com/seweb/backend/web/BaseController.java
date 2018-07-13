@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@RequestMapping("/services")
+@RequestMapping("")
 public class BaseController
 {
     @Deprecated

@@ -12,7 +12,7 @@ public class NewsController extends TextController{
     @Autowired
     private NewsService newsService;
 
-    @RequestMapping(value = "/news")
+    @RequestMapping(value = "/home/news")
     public Response queryAllNews(Request request)
     {
         Response response = new Response();
@@ -34,7 +34,7 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/queryNews")
+    @RequestMapping(value = "/home/news/query")
     public Response queryNews(Request request){
         Response response = new Response();
 
@@ -56,7 +56,7 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/addNews")
+    @RequestMapping(value = "/manage/news/add")
     public Response addNews(Request request) {
         Response response = new Response();
 
@@ -76,7 +76,7 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/deleteNews")
+    @RequestMapping(value = "/manage/news/delete")
     public Response deleteNews(Request request) {
         Response response = new Response();
         try {
@@ -97,7 +97,7 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/editNews")
+    @RequestMapping(value = "/manage/news/edit")
     public Response editNews(Request request) {
         Response response = new Response();
         try {

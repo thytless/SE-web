@@ -1,10 +1,8 @@
 package com.seweb.backend.web;
 
-import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.core.web.Request;
 import com.seweb.backend.framework.core.web.Response;
 import com.seweb.backend.framework.core.web.ResponseType;
-import com.seweb.backend.service.ClientService;
 import com.seweb.backend.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,10 +15,7 @@ public class UserController extends BaseController{
     @Autowired
     private StaffService staffService;
 
-    @Autowired
-    private ClientService clientService;
-
-    @RequestMapping(value = "/register")
+    @RequestMapping(value = "/home/staffRegister")
     public Response register(Request request)
     {
         Response response = new Response();
@@ -31,7 +26,7 @@ public class UserController extends BaseController{
 
             /* Now staff registration only. */
 
-            staffService.register(request.getParams());
+            staffService.addUser(request.getParams());
 
             /*
             if(request.getParams().getString("isStaffReg") == "false"){
@@ -53,4 +48,44 @@ public class UserController extends BaseController{
 
         return response;
     }
+
+    @RequestMapping(value = "/manage/editAccount")
+    public Response updateUserInfo(Request request){
+        Response response = new Response();
+
+        try{
+            response.status = ResponseType.SUCCESS;
+            staffService.updateUser(request.getParams(),request.getUser());
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/critical/deleteAccount")
+    public Response deleteUser(Request request){
+        Response response = new Response();
+
+        try{
+            response.status = ResponseType.SUCCESS;
+            staffService.deleteUser(request.getParams());
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+
 }

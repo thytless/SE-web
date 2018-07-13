@@ -1,6 +1,8 @@
 package com.seweb.backend.service;
 
 import com.seweb.backend.domain.BaseEntity;
+import com.seweb.backend.domain.Staff;
+import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.date.DateUtil;
 import com.seweb.backend.framework.utils.string.StringUtil;
 import com.seweb.backend.repository.BaseRepository;
@@ -43,6 +45,18 @@ public class BaseService<T extends BaseEntity>
     }
     public T updateEntity(T entity)
     {
+
+        entity.setAlteredTime(DateUtil.formatTime(new Date()));
+
+        baseRepository.save(entity);
+        return entity;
+    }
+    public T updateEntity(T entity, User alteredUser)
+    {
+        if(alteredUser != null)
+        {
+            entity.setAlteredUserId(alteredUser.getId());
+        }
 
         entity.setAlteredTime(DateUtil.formatTime(new Date()));
 

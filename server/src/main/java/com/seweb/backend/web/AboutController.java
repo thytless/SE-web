@@ -12,7 +12,7 @@ public class AboutController extends TextController{
     @Autowired
     private AboutService aboutService;
 
-    @RequestMapping(value = "/about")
+    @RequestMapping(value = "/home/about")
     public Response queryLatestEnabledAbout(Request request)
     {
         Response response = new Response();

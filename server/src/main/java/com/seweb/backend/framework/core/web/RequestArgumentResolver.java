@@ -21,9 +21,6 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 {
 	@Autowired
 	private StaffService staffService;
-
-	@Autowired
-	private ClientService clientService;
 	
     @Override
     public boolean supportsParameter(MethodParameter methodParameter)
@@ -43,35 +40,31 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 
     	//通过请求中的参数username设置request的user&userType
     	String username = webRequest.getParameter("username");
-    	String isRegister = webRequest.getParameter("isRegister");
 
-		System.out.println("isRegister: "+isRegister);
+		String[] descriptions = webRequest.getDescription(true).split(";");
+		String uri = descriptions[0].split("=")[1];
+		String client = descriptions[1].split("=")[1];
+		request.setUri(uri);
+		request.setClient(client);
 
 		/* MODIFIED BEGIN */
 
 		if(username != null) {
 
 			/* not registration & username not found*/
-			if(isRegister.equals("false")) {
+			if(!"/staffLogin".equals(uri)) {
 				Staff staff = staffService.getUserByUsername(username);
 				if (staff == null) {
-					Client client = clientService.getUserByUsername(username);
-					if (client == null) {
-						throw new Exception("Username:" + username + " not exist!");
-					}
-					request.setUserType(UserType.CLIENT);
-					request.setUser(client);
+					throw new Exception("Username:" + username + " not exist!");
 				} else if (staff.getAdmin() == 1) {
-					request.setUserType(UserType.ADMIN);
 					request.setUser(staff);
 				} else {
-					request.setUserType(UserType.STAFF);
 					request.setUser(staff);
 				}
 			}
 
 			/* username duplication */
-			else if(staffService.getUserByUsername(username) != null || clientService.getUserByUsername(username) != null){
+			else if(staffService.getUserByUsername(username) != null){
 				throw new Exception("Username:" + username + " exists!");
 			}
 
@@ -80,12 +73,6 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 
     	/* END */
 
-    	String[] descriptions = webRequest.getDescription(true).split(";");
-    	String uri = descriptions[0].split("=")[1];
-    	String client = descriptions[1].split("=")[1];
-    	request.setUri(uri);
-    	request.setClient(client);
-    	
     	String dateTime = DateUtil.formatTime(new Date());
     	request.setDateTime(dateTime);
     	
