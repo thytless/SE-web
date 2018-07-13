@@ -1,5 +1,7 @@
 package com.seweb.backend.web;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.framework.core.web.Request;
 import com.seweb.backend.framework.core.web.Response;
 import com.seweb.backend.framework.core.web.ResponseType;
@@ -26,7 +28,7 @@ public class UserController extends BaseController{
 
             /* Now staff registration only. */
 
-            staffService.addUser(request.getParams());
+            staffService.addStaff(request.getParams());
 
             /*
             if(request.getParams().getString("isStaffReg") == "false"){
@@ -49,13 +51,16 @@ public class UserController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/editAccount")
-    public Response updateUserInfo(Request request){
+    @RequestMapping(value = "/manage/editStaff")
+    public Response updateStaffInfo(Request request){
         Response response = new Response();
 
         try{
             response.status = ResponseType.SUCCESS;
-            staffService.updateUser(request.getParams(),request.getUser());
+            JSONObject params = request.getParams();
+            if(request.getUser().getUsername() != params.getString("username"))
+                throw new Exception("Access Denied! You cannot edit other's profile.");
+            staffService.updateStaff(request.getParams(),request.getUser());
             response.message = "";
         }
         catch (Exception e){
@@ -68,13 +73,51 @@ public class UserController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/critical/deleteAccount")
-    public Response deleteUser(Request request){
+    @RequestMapping(value = "/manage/critical/allStaff")
+    public Response queryAllStaff(Request request){
         Response response = new Response();
 
         try{
             response.status = ResponseType.SUCCESS;
-            staffService.deleteUser(request.getParams());
+            response.data = staffService.queryAllStaff();
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/manage/critical/staffRoles")
+    public Response queryStaffRoles(Request request){
+        Response response = new Response();
+
+        try{
+            response.status = ResponseType.SUCCESS;
+            response.data = staffService.queryStaffRoles(request.getParams());
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/manage/critical/deleteStaff")
+    public Response deleteStaff(Request request){
+        Response response = new Response();
+
+        try{
+            response.status = ResponseType.SUCCESS;
+            staffService.deleteStaff(request.getParams());
             response.message = "";
         }
         catch (Exception e){

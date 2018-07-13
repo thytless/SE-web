@@ -3,7 +3,6 @@ package com.seweb.backend.framework.core.web;
 import java.util.List;
 
 import com.seweb.backend.domain.User;
-import com.seweb.backend.domain.type.UserType;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
@@ -11,8 +10,6 @@ import com.alibaba.fastjson.JSONObject;
 public class Request 
 {
 	private User user;
-
-	private UserType userType;
 
 	private String uri;
 	
@@ -87,14 +84,6 @@ public class Request
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
 	}
 }
 

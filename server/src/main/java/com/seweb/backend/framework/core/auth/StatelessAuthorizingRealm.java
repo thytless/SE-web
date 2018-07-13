@@ -1,9 +1,10 @@
 package com.seweb.backend.framework.core.auth;
 
-import com.seweb.backend.domain.Function;
 import com.seweb.backend.domain.Role;
+import com.seweb.backend.domain.Staff;
 import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.encryption.HmacSHA256Util;
+import com.seweb.backend.mapper.StaffRoleMapper;
 import com.seweb.backend.repository.StaffRepository;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -15,11 +16,16 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 
 public class StatelessAuthorizingRealm extends AuthorizingRealm
 {
 	@Autowired
 	private StaffRepository staffRepository;
+
+	@Autowired
+	private StaffRoleMapper staffRoleMapper;
 	
 	@Override
     public boolean supports(AuthenticationToken token) 
@@ -53,23 +59,17 @@ public class StatelessAuthorizingRealm extends AuthorizingRealm
     	String username = (String) principals.getPrimaryPrincipal();
     	SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
-		User user = staffRepository.findByUsername(username);
-		if(user == null)
-		{
+		Staff staff = staffRepository.findByUsername(username);
+		if(staff == null)
 			return null;
-		}
-    	
 
-    	for(Role role : user.getRoles()){
-    		String roleString = role.getRoleName();
-    		authorizationInfo.addRole(roleString);
+		List<String> roleIdList = staffRoleMapper.getStaffRole(staff.getId());
+		if(roleIdList == null)
+			return null;
+    	for(String string : roleIdList){
+    		authorizationInfo.addRole(string);
     	}
 
-    	for(Function function : user.getFunctions()){
-
-    		String functionString = function.getFunctionString();
-    		authorizationInfo.addStringPermission(functionString);
-    	}
 
     	return authorizationInfo;
     }

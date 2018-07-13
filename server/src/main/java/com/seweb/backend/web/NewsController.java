@@ -62,7 +62,7 @@ public class NewsController extends TextController{
         try {
             newsService.addNews(request.getParams());
             response.status = ResponseType.SUCCESS;
-
+            response.message = "";
         }
         catch(Exception e)
         {

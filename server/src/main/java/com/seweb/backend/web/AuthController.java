@@ -1,7 +1,7 @@
 package com.seweb.backend.web;
 
 import com.alibaba.fastjson.JSONObject;
-import com.seweb.backend.domain.User;
+import com.seweb.backend.domain.Staff;
 import com.seweb.backend.framework.core.web.*;
 import com.seweb.backend.framework.utils.encryption.HmacSHA256Util;
 import com.seweb.backend.service.*;
@@ -15,9 +15,6 @@ public class AuthController extends BaseController {
     @Autowired
     private StaffService staffService;
 
-    @Autowired
-    private FunctionService functionService;
-
     @RequestMapping(value = "/home/staffLogin")
     public Response staffLogin(Request request)
     {
@@ -25,15 +22,16 @@ public class AuthController extends BaseController {
 
         try
         {
-            User user = staffService.getLoginUser(request.getParams());
-            JSONObject userJson = JSONObject.parseObject(JSONObject.toJSONString(user));
+            Staff staff = staffService.getLoginUser(request.getParams());
+            JSONObject userJson = JSONObject.parseObject(JSONObject.toJSONString(staff));
             //user中没有modules信息，但前端需要，故这里将该用户可以管理的modules发给前端，
             //前端根据这些modules决定侧边栏显示哪些modules
-            userJson.put("modules", functionService.getFunctionsHierarchies(user.getFunctions()));
+            //userJson.put("modules", functionService.getFunctionsHierarchies(user.getFunctions()));
             //logger.info("处理完成");
+            userJson.put("roles",staffService.getStaffRoleString(staff));
             System.out.println("处理完成--systemout");
 
-            String digest = HmacSHA256Util.digest(user.getUsername(), user.getPassword());
+            String digest = HmacSHA256Util.digest(staff.getUsername(), staff.getPassword());
             userJson.put("clientDigest", digest);
 
             response.status = ResponseType.SUCCESS;

@@ -20,48 +20,7 @@ public class User extends BaseEntity
 
 	private String email;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "TBL_SYS_ROLE_USER", joinColumns =
-			{
-					@JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
-			}, inverseJoinColumns =
-			{
-					@JoinColumn(name = "ROLE_ID", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
-			})
-	private List<Role> roles;
 
-	@Transient
-	private List<Function> functions;
-
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
-	//根据用户的角色给用户赋功能
-	public List<Function> getFunctions()
-	{
-		List<Role> roles = this.roles;
-
-		if(roles != null && roles.size() != 0)
-		{
-			List<Function> functions = new ArrayList<Function>();
-
-			for(Role role : roles)
-			{
-				List<Function> subFunctions = role.getFunctions();
-
-				functions.addAll(subFunctions);
-			}
-
-			return functions;
-		}
-
-		return this.functions;
-	}
 
 	public String getPhoneNumber() {
 		return phoneNumber;

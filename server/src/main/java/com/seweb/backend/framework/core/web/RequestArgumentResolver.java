@@ -2,9 +2,7 @@ package com.seweb.backend.framework.core.web;
 
 import java.util.Date;
 
-import com.seweb.backend.domain.Client;
 import com.seweb.backend.domain.Staff;
-import com.seweb.backend.domain.type.UserType;
 import com.seweb.backend.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -52,12 +50,10 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 		if(username != null) {
 
 			/* not registration & username not found*/
-			if(!"/staffLogin".equals(uri)) {
+			if(!"/home/staffRegister".equals(uri)) {
 				Staff staff = staffService.getUserByUsername(username);
 				if (staff == null) {
 					throw new Exception("Username:" + username + " not exist!");
-				} else if (staff.getAdmin() == 1) {
-					request.setUser(staff);
 				} else {
 					request.setUser(staff);
 				}
@@ -80,6 +76,7 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
         JSONObject params = JSONObject.parseObject(paramsString);
         
         request.setParams(params);
+		System.out.println("Params: "+paramsString);
 
         return request;
     }

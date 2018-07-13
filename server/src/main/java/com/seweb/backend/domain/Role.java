@@ -1,11 +1,6 @@
 package com.seweb.backend.domain;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.seweb.backend.domain.BaseEntity;
-import com.seweb.backend.domain.Function;
-
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "TBL_SYS_ROLE")
@@ -21,17 +16,7 @@ public class Role extends BaseEntity
 	
 	@Column(name = "DESCRIPTION")
 	private String description;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "TBL_SYS_ROLE_FUNCTION", joinColumns = 
-	{
-		@JoinColumn(name = "ROLE_ID", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
-	}, inverseJoinColumns = 
-	{
-		@JoinColumn(name = "FUNCTION_ID", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
-	})
-	@JSONField(deserialize = false)
-	private List<Function> functions;
+
 	
 	public String getRoleName() {
 		return roleName;
@@ -39,15 +24,6 @@ public class Role extends BaseEntity
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
-	}
-
-	public List<Function> getFunctions() {
-		return functions;
-	}
-
-	@JSONField(deserialize = false)
-	public void setFunctions(List<Function> functions) {
-		this.functions = functions;
 	}
 
 	public String getDescription() {
