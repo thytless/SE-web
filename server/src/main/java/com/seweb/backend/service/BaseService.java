@@ -1,7 +1,6 @@
 package com.seweb.backend.service;
 
 import com.seweb.backend.domain.BaseEntity;
-import com.seweb.backend.domain.Staff;
 import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.date.DateUtil;
 import com.seweb.backend.framework.utils.string.StringUtil;
@@ -34,11 +33,34 @@ public class BaseService<T extends BaseEntity>
             entity.setId(id);
         }
 
+
+
         entity.setCreatedTime(DateUtil.formatDateTime(new Date()));
 
         baseRepository.save(entity);
         return entity;
     }
+
+    public T saveEntity(T entity, User user)
+    {
+        String id = entity.getId();
+        if(StringUtil.isEmpty(id))
+        {
+            id = UUID.randomUUID().toString();
+            entity.setId(id);
+        }
+
+        if(user != null)
+        {
+            entity.setCreatedUserId(user.getId());
+        }
+
+        entity.setCreatedTime(DateUtil.formatDateTime(new Date()));
+
+        baseRepository.save(entity);
+        return entity;
+    }
+
     public void deleteEntity(String id)
     {
         baseRepository.deleteById(id);

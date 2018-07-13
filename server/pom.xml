@@ -113,22 +113,13 @@
 			<artifactId>activiti-spring</artifactId>
 			<version>6.0.0</version>
 		</dependency>
-	</dependencies>
 
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<fork>true</fork>
-					<executable>/usr/local/jdk/bin/javac</executable>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

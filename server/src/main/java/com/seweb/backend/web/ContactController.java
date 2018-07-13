@@ -1,31 +1,36 @@
 package com.seweb.backend.web;
 
-import com.seweb.backend.framework.core.web.*;
-import com.seweb.backend.service.NewsService;
+import com.seweb.backend.framework.core.web.Request;
+import com.seweb.backend.framework.core.web.Response;
+import com.seweb.backend.framework.core.web.ResponseType;
+import com.seweb.backend.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-public class NewsController extends TextController{
-
+public class ContactController extends TextController{
     @Autowired
-    private NewsService newsService;
+    private ContactService contactService;
 
-    @RequestMapping(value = "/home/news")
-    public Response queryAllNews(Request request)
+    @RequestMapping(value = "/contact")
+    public Response queryAllContact(Request request)
     {
         Response response = new Response();
 
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = newsService.queryAllNews();
+            response.data = contactService.queryAllContact();
             response.message = "";
         }
         catch(Exception e)
         {
             e.printStackTrace();
+
             response.status = ResponseType.FAILURE;
             response.message = e.getMessage();
         }
@@ -33,14 +38,14 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/home/news/query")
-    public Response queryNews(Request request){
+    @RequestMapping(value = "/queryContact")
+    public Response queryContact(Request request){
         Response response = new Response();
 
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = newsService.queryNewsById(request.getParams());
+            response.data = contactService.queryContactById(request.getParams());
             response.message = "";
 
         }
@@ -55,12 +60,12 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/news/add")
-    public Response addNews(Request request) {
+    @RequestMapping(value = "/addContact")
+    public Response addContact(Request request) {
         Response response = new Response();
 
         try {
-            newsService.addNews(request.getParams());
+            contactService.addContact(request.getParams());
             response.status = ResponseType.SUCCESS;
 
         }
@@ -75,11 +80,11 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/news/delete")
-    public Response deleteNews(Request request) {
+    @RequestMapping(value = "/deleteContact")
+    public Response deleteContact(Request request) {
         Response response = new Response();
         try {
-            newsService.deleteNews(request.getParams());
+            contactService.deleteContact(request.getParams());
             response.status = ResponseType.SUCCESS;
             response.message = "";
 
@@ -95,11 +100,11 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/news/edit")
-    public Response editNews(Request request) {
+    @RequestMapping(value = "/editContact")
+    public Response editContact(Request request) {
         Response response = new Response();
         try {
-            newsService.editNews(request.getParams());
+            contactService.editContact(request.getParams());
             response.status = ResponseType.SUCCESS;
 
         }
