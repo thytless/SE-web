@@ -2,16 +2,18 @@ package com.seweb.backend.domain;
 
 import javax.persistence.*;
 
+//解决方案
 @Entity
 @Table(name = "tbl_text_solution")
 public class Solution extends Text{
-    private int type;
+    @Column(length = 102400)
+    private String introduction;
 
-    public int getType() {
-        return type;
+    public String getIntroduction() {
+        return introduction;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 }

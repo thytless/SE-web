@@ -56,6 +56,7 @@ public class NewsService extends BaseService<News> {
         News news = JSONObject.toJavaObject(tp, News.class);
         news.setName(name);
         news.setContent(content);
+        this.updateEntity(news);
 
     }
 }
