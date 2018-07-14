@@ -1,5 +1,6 @@
 package com.seweb.backend.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.Role;
@@ -8,6 +9,7 @@ import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.encryption.MD5Util;
 import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.mapper.StaffRoleMapper;
+import com.seweb.backend.mapper.VerifiableMapper;
 import com.seweb.backend.repository.RoleRepository;
 import com.seweb.backend.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class StaffService extends UserService<Staff> {
     @Autowired
     private StaffRoleMapper staffRoleMapper;
 
+    @Autowired
+    private VerifiableMapper verifiableMapper;
+
 
     public Staff toObject(JSONObject params) {
         return JSONObject.toJavaObject(params, Staff.class);
@@ -41,15 +46,23 @@ public class StaffService extends UserService<Staff> {
 
         staff.setId(staffId);
 
+        staff.setStatus("Unauthorized");
+
         updateStaffRoles(params,staffId);
 
         this.saveEntity(staff);
     }
 
-    public void updateStaff(JSONObject params, User alteredUser) throws Exception{
-        Staff staff = toObject(params);
-        this.updateEntity(staff,alteredUser);
-
+    public void updateStaff(JSONObject params, String alteredUserId) throws Exception{
+        JSONObject staffJson = JSON.parseObject(JSON.toJSONString(staffRepository.findById(params.getString("id"))));
+        Staff staff = JSONObject.toJavaObject(staffJson,Staff.class);
+        String username = params.getString("username");
+        String email = params.getString("email");
+        String phoneNumber = params.getString("phoneNumber");
+        if(username != null)staff.setUsername(username);
+        if(email != null)staff.setEmail(email);
+        if(phoneNumber != null)staff.setPhoneNumber(phoneNumber);
+        this.updateEntity(staff,alteredUserId);
     }
 
     public void deleteStaff(JSONObject params) throws Exception
@@ -107,10 +120,10 @@ public class StaffService extends UserService<Staff> {
 
     public String getStaffRoleStringByStaffId(String staffId){
         int roleCount = roleRepository.findAll().size();
-        byte[] roleString = new byte[roleCount];
+        char[] roleString = new char[roleCount];
         List<String> staffRoleList = staffRoleMapper.getStaffRole(staffId);
         for(int i = 0;i < roleCount;i++)
-            roleString[i] = 0;
+            roleString[i] = '0';
         if(staffRoleList != null){
             for(String roleId : staffRoleList){
                 String hql = "FROM Role role WHERE role.id = :roleId";
@@ -118,9 +131,19 @@ public class StaffService extends UserService<Staff> {
                 paramsMap.put("roleId",roleId);
 
                 String roleCode = roleRepository.executeHql(hql,paramsMap).get(0).getCode();
-                roleString[Integer.valueOf(roleCode)] = 1;
+                roleString[Integer.valueOf(roleCode)] = '1';
             }
         }
         return new String(roleString);
+    }
+
+    public JSONArray queryAllUnauthorizedStaff(){
+        String hql = "FROM Staff staff WHERE staff.status = 'Unauthorized'";
+        List<Staff> staffList= staffRepository.executeHql(hql,null);
+        return JsonUtil.toJSONArray(staffList);
+    }
+
+    public void authorizeStaff(JSONObject params){
+        verifiableMapper.authorizeStaff(params.getString("id"));
     }
 }

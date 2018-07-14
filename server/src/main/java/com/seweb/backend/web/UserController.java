@@ -60,7 +60,7 @@ public class UserController extends BaseController{
             JSONObject params = request.getParams();
             if(request.getUser().getUsername() != params.getString("username"))
                 throw new Exception("Access Denied! You cannot edit other's profile.");
-            staffService.updateStaff(request.getParams(),request.getUser());
+            staffService.updateStaff(request.getParams(),request.getUser().getId());
             response.message = "";
         }
         catch (Exception e){

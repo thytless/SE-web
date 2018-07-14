@@ -26,6 +26,9 @@ public class BaseEntity {
     @Column(name = "altered_user_id")
     private String alteredUserId;
 
+    @Column(name = "status")
+    private String status;
+
     public String getId() {
         return id;
     }
@@ -117,5 +120,13 @@ public class BaseEntity {
     public String toString()
     {
         return JSON.toJSONString(this);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

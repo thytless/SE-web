@@ -50,6 +50,42 @@ public class AuthController extends BaseController {
         return response;
     }
 
+    @RequestMapping(value = "/manage/critical/authorize/list")
+    public Response queryAllUnauthorizedStaff(Request request){
+        Response response = new Response();
+        try {
+            response.status = ResponseType.SUCCESS;
+            response.data = staffService.queryAllUnauthorizedStaff();
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+        return response;
+    }
 
-
+    @RequestMapping(value = "/manage/critical/authorize/execute")
+    public Response authorizeStaff(Request request){
+        Response response = new Response();
+        try {
+            /* TODO: Send Email */
+            response.status = ResponseType.SUCCESS;
+            String reply = request.getParams().getString("reply");
+            if("Accept".equals(reply)) {
+                staffService.authorizeStaff(request.getParams());
+            }
+            else if("Refuse".equals(reply)) {
+                staffService.deleteStaff(request.getParams());
+            }
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+        return response;
+    }
 }

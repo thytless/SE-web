@@ -20,3 +20,4 @@ INSERT INTO `tbl_sys_role` VALUES
 ('role120',NULL,NULL,'2',NULL,NULL,NULL,'content maintainer',NULL,'MCont'),
 ('role110',NULL,NULL,'1',NULL,NULL,NULL,'news maintainer',NULL,'MNews'),
 ('role777',NULL,NULL,'0',NULL,NULL,NULL,'administrator',NULL,'Admin');
+

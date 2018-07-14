@@ -73,11 +73,11 @@ public class BaseService<T extends BaseEntity>
         baseRepository.save(entity);
         return entity;
     }
-    public T updateEntity(T entity, User alteredUser)
+    public T updateEntity(T entity, String alteredUserId)
     {
-        if(alteredUser != null)
+        if(alteredUserId != null)
         {
-            entity.setAlteredUserId(alteredUser.getId());
+            entity.setAlteredUserId(alteredUserId);
         }
 
         entity.setAlteredTime(DateUtil.formatTime(new Date()));

@@ -48,6 +48,10 @@ public class UserService<T extends User> extends BaseService<T> {
             throw new Exception("no such user");
         }
 
+        if(user.getStatus().equals("Unauthorized")){
+            throw new Exception("unauthorized user");
+        }
+
         String encryptedPassword = MD5Util.encrypt(password);
         if(!encryptedPassword.equals(user.getPassword()))
         //if(!password.equals(user.getPassword()))

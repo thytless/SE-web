@@ -9,15 +9,4 @@ import java.io.Serializable;
 public class About extends Text implements Serializable {
 
     private static final long serialVersionUID = 3370323311234791174L;
-
-    private byte enabled;
-    private int type;
-
-    public byte getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(byte enabled) {
-        this.enabled = enabled;
-    }
 }

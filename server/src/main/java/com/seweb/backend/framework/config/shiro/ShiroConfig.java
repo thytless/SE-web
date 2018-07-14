@@ -30,11 +30,13 @@ public class ShiroConfig
     	factoryBean.setUnauthorizedUrl("/unauthorized");
 
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+        filterChainDefinitionMap.put("/**","anon");
+        /*
         filterChainDefinitionMap.put("/home/**", "anon");
         //filterChainDefinitionMap.put("/manage/**", "statelessAuthc");
         filterChainDefinitionMap.put("/manage/critical/**", "statelessAuthc, roles[role777]");
         filterChainDefinitionMap.put("/manage/news/**", "statelessAuthc, roles[role110]");
-
+*/
         factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         
         factoryBean.getFilters().put("statelessAuthc", statelessAuthcFilter());
