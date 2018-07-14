@@ -65,8 +65,10 @@ public class StaffService extends UserService<Staff> {
         return JsonUtil.toJSONArray(staffRepository.findAll());
     }
 
-    public JSONArray queryStaffRoles(JSONObject params){
-        return JsonUtil.toJSONArray(staffRoleMapper.getStaffRole(params.getString("id")));
+    public JSONObject queryStaffRoles(JSONObject params){
+        JSONObject staffRoleJson = new JSONObject();
+        staffRoleJson.put("roleString", getStaffRoleStringByStaffId(params.getString("id")));
+        return staffRoleJson;
     }
 
     public void updateStaffRoles(JSONObject params, String staffId) throws Exception{
@@ -103,10 +105,10 @@ public class StaffService extends UserService<Staff> {
         updateStaffRoles(params,staffId);
     }
 
-    public String getStaffRoleString(Staff staff){
+    public String getStaffRoleStringByStaffId(String staffId){
         int roleCount = roleRepository.findAll().size();
         byte[] roleString = new byte[roleCount];
-        List<String> staffRoleList = staffRoleMapper.getStaffRole(staff.getId());
+        List<String> staffRoleList = staffRoleMapper.getStaffRole(staffId);
         for(int i = 0;i < roleCount;i++)
             roleString[i] = 0;
         if(staffRoleList != null){

@@ -31,9 +31,9 @@ public class ShiroConfig
 
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         filterChainDefinitionMap.put("/home/**", "anon");
-        filterChainDefinitionMap.put("/manage/**", "statelessAuthc");
-        filterChainDefinitionMap.put("/manage/critical/**", "roles[role777]");
-        filterChainDefinitionMap.put("/manage/news/**", "roles[role110]");
+        //filterChainDefinitionMap.put("/manage/**", "statelessAuthc");
+        filterChainDefinitionMap.put("/manage/critical/**", "statelessAuthc, roles[role777]");
+        filterChainDefinitionMap.put("/manage/news/**", "statelessAuthc, roles[role110]");
 
         factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         

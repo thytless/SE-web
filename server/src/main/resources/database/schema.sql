@@ -8,34 +8,15 @@ SET NAMES utf8mb4;
 
 
 
-CREATE TABLE `tbl_sys_role` (
-  `id` varchar(255) NOT NULL,
-  `altered_time` varchar(255) DEFAULT NULL,
-  `altered_user_id` varchar(255) DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `created_time` varchar(255) DEFAULT NULL,
-  `created_user_id` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `role_name` varchar(255) DEFAULT NULL,
-  `role_string` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+CREATE TABLE `tbl_sys_staff_role` (
+  `id` int COLLATE utf8_bin primary key not null auto_increment,
+  `staff_id` varchar(255) COLLATE utf8_bin NOT NULL,
+  `role_id` varchar(255) COLLATE utf8_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-CREATE TABLE `tbl_sys_staff` (
-  `id` varchar(255) NOT NULL,
-  `altered_time` varchar(255) DEFAULT NULL,
-  `altered_user_id` varchar(255) DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `created_time` varchar(255) DEFAULT NULL,
-  `created_user_id` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `identification` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `truename` varchar(255) DEFAULT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phone_number` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
+INSERT INTO `tbl_sys_role` VALUES
+('role220',NULL,NULL,'4',NULL,NULL,NULL,'content verifier',NULL,'VCont'),
+('role210',NULL,NULL,'3',NULL,NULL,NULL,'news verifier',NULL,'VNews'),
+('role120',NULL,NULL,'2',NULL,NULL,NULL,'content maintainer',NULL,'MCont'),
+('role110',NULL,NULL,'1',NULL,NULL,NULL,'news maintainer',NULL,'MNews'),
+('role777',NULL,NULL,'0',NULL,NULL,NULL,'administrator',NULL,'Admin');

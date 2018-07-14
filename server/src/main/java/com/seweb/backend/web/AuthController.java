@@ -28,8 +28,9 @@ public class AuthController extends BaseController {
             //前端根据这些modules决定侧边栏显示哪些modules
             //userJson.put("modules", functionService.getFunctionsHierarchies(user.getFunctions()));
             //logger.info("处理完成");
-            userJson.put("roles",staffService.getStaffRoleString(staff));
-            System.out.println("处理完成--systemout");
+            //System.out.println("处理完成--systemout");
+
+            userJson.put("roleString",staffService.getStaffRoleStringByStaffId(staff.getId()));
 
             String digest = HmacSHA256Util.digest(staff.getUsername(), staff.getPassword());
             userJson.put("clientDigest", digest);
