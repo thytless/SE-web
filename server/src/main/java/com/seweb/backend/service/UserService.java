@@ -48,7 +48,7 @@ public class UserService<T extends User> extends BaseService<T> {
             throw new Exception("no such user");
         }
 
-        if(user.getStatus().equals("Unauthorized")){
+        if(user.getStatus().equals("unauthorized")){
             throw new Exception("unauthorized user");
         }
 

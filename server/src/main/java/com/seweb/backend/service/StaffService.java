@@ -67,7 +67,7 @@ public class StaffService extends UserService<Staff> {
 
     public void deleteStaff(JSONObject params) throws Exception
     {
-        String userId = params.getString("username");
+        String userId = params.getString("id");
         if("admin".equals(userId)){
             throw new Exception("Admin cannot be deleted.");
         }
@@ -138,8 +138,11 @@ public class StaffService extends UserService<Staff> {
     }
 
     public JSONArray queryAllUnauthorizedStaff(){
-        String hql = "FROM Staff staff WHERE staff.status = 'Unauthorized'";
+        String hql = "FROM Staff staff WHERE staff.status = 'unauthorized'";
         List<Staff> staffList= staffRepository.executeHql(hql,null);
+        for(Staff staff : staffList){
+            staff.setRoleString(getStaffRoleStringByStaffId(staff.getId()));
+        }
         return JsonUtil.toJSONArray(staffList);
     }
 

@@ -56,6 +56,7 @@ public class AuthController extends BaseController {
         try {
             response.status = ResponseType.SUCCESS;
             response.data = staffService.queryAllUnauthorizedStaff();
+
             response.message = "";
         }
         catch (Exception e){
@@ -73,10 +74,10 @@ public class AuthController extends BaseController {
             /* TODO: Send Email */
             response.status = ResponseType.SUCCESS;
             String reply = request.getParams().getString("reply");
-            if("Accept".equals(reply)) {
+            if("accept".equals(reply)) {
                 staffService.authorizeStaff(request.getParams());
             }
-            else if("Refuse".equals(reply)) {
+            else if("refuse".equals(reply)) {
                 staffService.deleteStaff(request.getParams());
             }
             response.message = "";
