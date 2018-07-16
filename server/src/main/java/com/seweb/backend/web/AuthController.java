@@ -56,6 +56,7 @@ public class AuthController extends BaseController {
         try {
             response.status = ResponseType.SUCCESS;
             response.data = staffService.queryAllUnauthorizedStaff();
+
             response.message = "";
         }
         catch (Exception e){

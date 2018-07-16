@@ -140,6 +140,9 @@ public class StaffService extends UserService<Staff> {
     public JSONArray queryAllUnauthorizedStaff(){
         String hql = "FROM Staff staff WHERE staff.status = 'Unauthorized'";
         List<Staff> staffList= staffRepository.executeHql(hql,null);
+        for(Staff staff : staffList){
+            staff.setRoleString(getStaffRoleStringByStaffId(staff.getId()));
+        }
         return JsonUtil.toJSONArray(staffList);
     }
 

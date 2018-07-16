@@ -10,4 +10,15 @@ import java.util.List;
 public class Staff extends User implements Serializable {
 
     private static final long serialVersionUID = 5721703468156919856L;
+
+    @Transient
+    private String roleString;
+
+    public String getRoleString() {
+        return roleString;
+    }
+
+    public void setRoleString(String roleString) {
+        this.roleString = roleString;
+    }
 }
