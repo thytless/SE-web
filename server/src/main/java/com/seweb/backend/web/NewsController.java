@@ -60,8 +60,10 @@ public class NewsController extends TextController{
         Response response = new Response();
 
         try {
-            newsService.addNews(request.getParams());
+
+            response.data = newsService.addNews(request.getParams());
             response.status = ResponseType.SUCCESS;
+            response.message = "";
 
         }
         catch(Exception e)
@@ -101,6 +103,28 @@ public class NewsController extends TextController{
         try {
             newsService.editNews(request.getParams());
             response.status = ResponseType.SUCCESS;
+            response.message = "";
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/bindNews")
+    public Response bindNews(Request request) {
+        Response response = new Response();
+
+        try {
+            newsService.bindNews(request.getParams());
+            response.status = ResponseType.SUCCESS;
+            response.message = "";
 
         }
         catch(Exception e)

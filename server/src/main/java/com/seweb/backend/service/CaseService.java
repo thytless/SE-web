@@ -39,7 +39,7 @@ public class CaseService extends BaseService<Case>{
 
     //传包时，每个要素都需加上，否则，默认为Null
     public void editCase(JSONObject params) {
-        //Case cs = JSONObject.toJavaObject(params, Case.class);
+        //Case cs = JSONObjec""t.toJavaObject(params, Case.class);
         //this.updateEntity(cs);
         String id = params.getString("id");
         String name=params.getString("name");
@@ -47,7 +47,10 @@ public class CaseService extends BaseService<Case>{
 
         JSONObject tp=JSON.parseObject(JSON.toJSONString(caseRepository.findById(id)));
         Case cs = JSONObject.toJavaObject(tp, Case.class);
-        cs.setName(name);
-        cs.setContent(content);
+        if(name!=null)
+            cs.setName(name);
+        if(content!=null)
+            cs.setContent(content);
+        this.updateEntity(cs);
     }
 }

@@ -17,7 +17,9 @@ public class ContactService extends BaseService<Contact>{
     @Autowired
     private ContactRepository contactRepository;
 
-    public JSONArray queryAllContact(){ return JsonUtil.toJSONArray(contactRepository.findAll()); }
+    public JSONArray queryAllContact(){
+        return JsonUtil.toJSONArray(contactRepository.findAll());
+    }
 
     public JSONObject queryContactById(JSONObject params) {
         String id = params.getString("id");
@@ -46,7 +48,10 @@ public class ContactService extends BaseService<Contact>{
 
         JSONObject tp=JSON.parseObject(JSON.toJSONString(contactRepository.findById(id)));
         Contact contact = JSONObject.toJavaObject(tp, Contact.class);
-        contact.setName(name);
-        contact.setContent(content);
+        if(name!=null)
+            contact.setName(name);
+        if(content!=null)
+            contact.setContent(content);
+        this.updateEntity(contact);
     }
 }

@@ -44,16 +44,21 @@ public class SolutionService extends BaseService<Solution>{
     }
 
     public void editSolution(JSONObject params) {
-        //params包括id、name、content其中，以id为主
+        //params包括id、name、content、introduction其中，以id为主
         //其他消息会被置为null
         String id = params.getString("id");
         String name=params.getString("name");
         String content=params.getString("content");
+        String introduction=params.getString("introduction");
 
         JSONObject tp=JSON.parseObject(JSON.toJSONString(solutionRepository.findById(id)));
         Solution solution = JSONObject.toJavaObject(tp, Solution.class);
-        solution.setName(name);
-        solution.setContent(content);
-
+        if(name!=null)
+            solution.setName(name);
+        if(content!=null)
+            solution.setContent(content);
+        if(introduction!=null)
+            solution.setIntroduction(introduction);
+        this.updateEntity(solution);
     }
 }

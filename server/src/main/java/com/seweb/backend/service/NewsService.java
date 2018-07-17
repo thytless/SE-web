@@ -32,11 +32,15 @@ public class NewsService extends BaseService<News> {
         return JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
     }
 
-    public void addNews(JSONObject params) {
-        //params包括name、content
+    public JSONObject addNews(JSONObject params) {
+        //params包括name、content、author
         News news = JSONObject.toJavaObject(params, News.class);
-        news.setId(UUID.randomUUID().toString());
+        String id=UUID.randomUUID().toString();
+        news.setId(id);
         this.saveEntity(news);
+        JSONObject Json = new JSONObject();
+        Json.put("id",id);
+        return Json;
     }
 
     public void deleteNews(JSONObject params) {
@@ -47,16 +51,27 @@ public class NewsService extends BaseService<News> {
 
     public void editNews(JSONObject params) {
         //params包括id、name、content其中，以id为主
-        //其他消息会被置为null
         String id = params.getString("id");
         String name=params.getString("name");
         String content=params.getString("content");
 
         JSONObject tp=JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
         News news = JSONObject.toJavaObject(tp, News.class);
-        news.setName(name);
-        news.setContent(content);
+        if(name!=null)
+            news.setName(name);
+        if(content!=null)
+            news.setContent(content);
         this.updateEntity(news);
 
+    }
+    public void bindNews(JSONObject params) {
+        //params包括id、picture其中，以id为主
+        String id = params.getString("id");
+        String picture = params.getString("picture");
+
+        JSONObject tp=JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
+        News news = JSONObject.toJavaObject(tp, News.class);
+        news.setPicture(picture);
+        this.updateEntity(news);
     }
 }

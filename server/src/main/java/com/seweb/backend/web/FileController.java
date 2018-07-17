@@ -1,11 +1,15 @@
 package com.seweb.backend.web;
 
+import com.seweb.backend.domain.Picture;
 import com.seweb.backend.framework.core.web.Response;
 import com.seweb.backend.framework.core.web.ResponseType;
+import com.seweb.backend.service.PictureService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,9 +19,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.UUID;
 
 @RestController
 public class FileController {
+    @Autowired
+    private PictureService pictureService;
+    // 设置文件存储路径
+    private String filePath = "/Users/jin/Documents/";
+
     @RequestMapping(value = "/upload")
     public Response upload(@RequestParam("file") MultipartFile file) {
         Response response = new Response();
@@ -29,10 +39,14 @@ public class FileController {
             }
             // 获取文件名
             String fileName = file.getOriginalFilename();
+            // 获取文件的后缀名
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            //System.out.println(suffixName);
+            //".pdf"
+            pictureService.addPicture(fileName);
 
-            // 设置文件存储路径
-            String filePath = "/Users/jin/Documents/";
             String path = filePath + fileName ;
+
 
             File dest = new File(path);
             // 检测是否存在目录
@@ -51,16 +65,14 @@ public class FileController {
         return response;
     }
 
-    @RequestMapping("/download")
-    public ResponseEntity<InputStreamResource> downloadFile(HttpServletRequest request) {
-        // 设置文件名，根据业务需要替换成要下载的文件名
-        String name="成绩互评.png";
-
+    @RequestMapping("/download/{name}")
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable("name")String name, HttpServletRequest request) {
         if (name != null) {
             //设置文件路径
+
             //String realPath = "D://aim//";
-            String realPath = "/Users/jin/Documents/";
-            File file = new File(realPath+name);
+
+            File file = new File(filePath+name);
 
             InputStream inputStream;
             try {
@@ -85,5 +97,15 @@ public class FileController {
 
         }
         return null;
+    }
+    @RequestMapping("/deleteFile/{name}")
+    public void deleteFile(@PathVariable("name")String name) {
+        if(name == null)
+            System.out.println("请输入文件名");
+
+        //TODO：考虑文件不存在的情况
+        File targetFile=new File(filePath,name);
+        boolean isDelete = targetFile.delete();
+        pictureService.deletePicture(name);
     }
 }

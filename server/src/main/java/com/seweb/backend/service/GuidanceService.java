@@ -53,8 +53,10 @@ public class GuidanceService extends BaseService<Guidance> {
 
         JSONObject tp=JSON.parseObject(JSON.toJSONString(guidanceRepository.findById(id)));
         Guidance guidance = JSONObject.toJavaObject(tp, Guidance.class);
-        guidance.setName(name);
-        guidance.setContent(content);
-
+        if(name!=null)
+            guidance.setName(name);
+        if(content!=null)
+            guidance.setContent(content);
+        this.updateEntity(guidance);
     }
 }
