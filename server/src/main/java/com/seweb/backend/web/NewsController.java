@@ -13,14 +13,13 @@ public class NewsController extends TextController{
     private NewsService newsService;
 
     @RequestMapping(value = "/home/news")
-    public Response queryAllNews(Request request)
-    {
+    public Response queryAllAuthorizedNews(Request request) {
         Response response = new Response();
 
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = newsService.queryAllNews();
+            response.data = newsService.queryByStatus("authorized");
             response.message = "";
         }
         catch(Exception e)
@@ -40,7 +39,7 @@ public class NewsController extends TextController{
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = newsService.queryNewsById(request.getParams());
+            response.data = newsService.queryById(request.getParams());
             response.message = "";
 
         }
@@ -55,12 +54,52 @@ public class NewsController extends TextController{
         return response;
     }
 
+    @RequestMapping(value = "/manage/news/list")
+    public Response queryNewsByAuthor(Request request) {
+        Response response = new Response();
+
+        try
+        {
+            response.status = ResponseType.SUCCESS;
+            response.data = newsService.queryByAuthor(request.getParams());
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/manage/critical/news/list")
+    public Response queryAllNews() {
+        Response response = new Response();
+
+        try
+        {
+            response.status = ResponseType.SUCCESS;
+            response.data = newsService.queryAll();
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
     @RequestMapping(value = "/manage/news/add")
     public Response addNews(Request request) {
         Response response = new Response();
 
         try {
-            newsService.addNews(request.getParams());
+            response.data = newsService.add(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
             response.message = "";
         }
@@ -79,10 +118,10 @@ public class NewsController extends TextController{
     public Response deleteNews(Request request) {
         Response response = new Response();
         try {
-            newsService.deleteNews(request.getParams());
+            newsService.concurrenceTest(request.getParams());
+            newsService.delete(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
             response.message = "";
-
         }
         catch(Exception e)
         {
@@ -99,9 +138,9 @@ public class NewsController extends TextController{
     public Response editNews(Request request) {
         Response response = new Response();
         try {
-            newsService.editNews(request.getParams());
+            newsService.concurrenceTest(request.getParams());
+            newsService.edit(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
-
         }
         catch(Exception e)
         {
@@ -111,6 +150,38 @@ public class NewsController extends TextController{
             response.message = e.getMessage();
         }
 
+        return response;
+    }
+
+    @RequestMapping(value = "/manage/news/authorize/list")
+    public Response queryAllUnauthorizedNews(Request request){
+        Response response = new Response();
+        try {
+            response.status = ResponseType.SUCCESS;
+            response.data = newsService.queryAuth();
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/manage/news/authorize/execute")
+    public Response authorizeNews(Request request){
+        Response response = new Response();
+        try {
+            response.status = ResponseType.SUCCESS;
+            newsService.handleAuthReply(request.getParams());
+            response.message = "";
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
         return response;
     }
 }

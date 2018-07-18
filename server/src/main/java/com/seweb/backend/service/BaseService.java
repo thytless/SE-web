@@ -1,15 +1,18 @@
 package com.seweb.backend.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.BaseEntity;
 import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.date.DateUtil;
+import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.framework.utils.string.StringUtil;
+import com.seweb.backend.mapper.AuthMapper;
 import com.seweb.backend.repository.BaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.UUID;
 
@@ -20,12 +23,16 @@ public class BaseService<T extends BaseEntity>
     public BaseRepository<T> baseRepository;
 
     @Autowired
+    private AuthMapper authMapper;
+
+    private static String TBL_NAME;
+
+    @Autowired
     public void setBaseRepository(BaseRepository<T> baseRepository) {
         this.baseRepository = baseRepository;
     }
 
-    public T saveEntity(T entity)
-    {
+    public T saveEntity(T entity) {
         String id = entity.getId();
         if(StringUtil.isEmpty(id))
         {
@@ -41,8 +48,7 @@ public class BaseService<T extends BaseEntity>
         return entity;
     }
 
-    public T saveEntity(T entity, User user)
-    {
+    public T saveEntity(T entity, String createdUserId) {
         String id = entity.getId();
         if(StringUtil.isEmpty(id))
         {
@@ -50,9 +56,9 @@ public class BaseService<T extends BaseEntity>
             entity.setId(id);
         }
 
-        if(user != null)
+        if(createdUserId != null)
         {
-            entity.setCreatedUserId(user.getId());
+            entity.setCreatedUserId(createdUserId);
         }
 
         entity.setCreatedTime(DateUtil.formatDateTime(new Date()));
@@ -61,20 +67,19 @@ public class BaseService<T extends BaseEntity>
         return entity;
     }
 
-    public void deleteEntity(String id)
-    {
+    public void deleteEntity(String id) {
         baseRepository.deleteById(id);
     }
-    public T updateEntity(T entity)
-    {
+
+    public T updateEntity(T entity) {
 
         entity.setAlteredTime(DateUtil.formatTime(new Date()));
 
         baseRepository.save(entity);
         return entity;
     }
-    public T updateEntity(T entity, String alteredUserId)
-    {
+
+    public T updateEntity(T entity, String alteredUserId) {
         if(alteredUserId != null)
         {
             entity.setAlteredUserId(alteredUserId);
@@ -84,5 +89,25 @@ public class BaseService<T extends BaseEntity>
 
         baseRepository.save(entity);
         return entity;
+    }
+
+    public void authorize(JSONObject params){
+        authMapper.authorize(params.getString("id"),TBL_NAME);
+    }
+
+    public void concurrenceTest(JSONObject params, BaseRepository<T> repository) throws Exception{
+        String id = params.getString("id");
+        String requestAlteredTime = params.getString("alteredTime");
+
+        if(requestAlteredTime == null)return;
+        String databaseAlteredTime = repository.findById(id).get().getAlteredTime();
+        if(databaseAlteredTime == null)return;
+
+        Date requestTime = DateUtil.getDateTimeFormat(requestAlteredTime);
+        Date databaseTime = DateUtil.getDateTimeFormat(databaseAlteredTime);
+
+        if(requestTime.before(databaseTime)){
+            throw new Exception("Changes have been made before this request! Please refresh your page.");
+        }
     }
 }

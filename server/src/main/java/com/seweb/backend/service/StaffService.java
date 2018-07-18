@@ -5,17 +5,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.Role;
 import com.seweb.backend.domain.Staff;
-import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.encryption.MD5Util;
 import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.mapper.StaffRoleMapper;
-import com.seweb.backend.mapper.VerifiableMapper;
-import com.seweb.backend.repository.RoleRepository;
+import com.seweb.backend.mapper.AuthMapper;
 import com.seweb.backend.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -30,15 +27,12 @@ public class StaffService extends UserService<Staff> {
     private StaffRoleMapper staffRoleMapper;
 
     @Autowired
-    private VerifiableMapper verifiableMapper;
+    private AuthMapper authMapper;
 
-
-    public Staff toObject(JSONObject params) {
-        return JSONObject.toJavaObject(params, Staff.class);
-    }
+    private static final String TBL_NAME = "tbl_sys_staff";
 
     public void addStaff(JSONObject params) throws Exception{
-        Staff staff = toObject(params);
+        Staff staff = JSONObject.toJavaObject(params, Staff.class);
 
         staff.setPassword(MD5Util.encrypt(params.getString("password")));
 
@@ -46,7 +40,7 @@ public class StaffService extends UserService<Staff> {
 
         staff.setId(staffId);
 
-        staff.setStatus("Unauthorized");
+        staff.setStatus("unauthorized");
 
         updateStaffRoles(params,staffId);
 
@@ -56,33 +50,40 @@ public class StaffService extends UserService<Staff> {
     public void updateStaff(JSONObject params, String alteredUserId) throws Exception{
         JSONObject staffJson = JSON.parseObject(JSON.toJSONString(staffRepository.findById(params.getString("id"))));
         Staff staff = JSONObject.toJavaObject(staffJson,Staff.class);
+
         String username = params.getString("username");
         String email = params.getString("email");
         String phoneNumber = params.getString("phoneNumber");
+
         if(username != null)staff.setUsername(username);
         if(email != null)staff.setEmail(email);
         if(phoneNumber != null)staff.setPhoneNumber(phoneNumber);
         this.updateEntity(staff,alteredUserId);
     }
 
-    public void deleteStaff(JSONObject params) throws Exception
-    {
-        String userId = params.getString("id");
-        if("admin".equals(userId)){
+    public void deleteStaff(JSONObject params) throws Exception {
+        String staffId = params.getString("id");
+        if(getStaffRoleStringByStaffId(staffId).charAt(0) == '1'){
             throw new Exception("Admin cannot be deleted.");
         }
-        staffRepository.deleteById(userId);
+        staffRepository.deleteById(staffId);
     }
+
+
 
     public JSONArray queryAllStaff(){
-        return JsonUtil.toJSONArray(staffRepository.findAll());
+        return queryStaffByStatus("authorized");
     }
 
-    public JSONObject queryStaffRoles(JSONObject params){
-        JSONObject staffRoleJson = new JSONObject();
-        staffRoleJson.put("roleString", getStaffRoleStringByStaffId(params.getString("id")));
-        return staffRoleJson;
+    public JSONArray queryStaffByStatus(String status){
+        List<Staff> staffList= staffRepository.findByStatus(status);
+        for(Staff staff : staffList){
+            staff.setRoleString(getStaffRoleStringByStaffId(staff.getId()));
+        }
+        return JsonUtil.toJSONArray(staffList);
     }
+
+
 
     public void updateStaffRoles(JSONObject params, String staffId) throws Exception{
 
@@ -118,6 +119,8 @@ public class StaffService extends UserService<Staff> {
         updateStaffRoles(params,staffId);
     }
 
+
+
     public String getStaffRoleStringByStaffId(String staffId){
         int roleCount = roleRepository.findAll().size();
         char[] roleString = new char[roleCount];
@@ -135,18 +138,5 @@ public class StaffService extends UserService<Staff> {
             }
         }
         return new String(roleString);
-    }
-
-    public JSONArray queryAllUnauthorizedStaff(){
-        String hql = "FROM Staff staff WHERE staff.status = 'unauthorized'";
-        List<Staff> staffList= staffRepository.executeHql(hql,null);
-        for(Staff staff : staffList){
-            staff.setRoleString(getStaffRoleStringByStaffId(staff.getId()));
-        }
-        return JsonUtil.toJSONArray(staffList);
-    }
-
-    public void authorizeStaff(JSONObject params){
-        verifiableMapper.authorizeStaff(params.getString("id"));
     }
 }

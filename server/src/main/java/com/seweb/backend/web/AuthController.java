@@ -55,7 +55,7 @@ public class AuthController extends BaseController {
         Response response = new Response();
         try {
             response.status = ResponseType.SUCCESS;
-            response.data = staffService.queryAllUnauthorizedStaff();
+            response.data = staffService.queryStaffByStatus("unauthorized");
 
             response.message = "";
         }
@@ -75,7 +75,7 @@ public class AuthController extends BaseController {
             response.status = ResponseType.SUCCESS;
             String reply = request.getParams().getString("reply");
             if("accept".equals(reply)) {
-                staffService.authorizeStaff(request.getParams());
+                staffService.authorize(request.getParams());
             }
             else if("refuse".equals(reply)) {
                 staffService.deleteStaff(request.getParams());

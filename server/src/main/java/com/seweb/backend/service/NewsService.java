@@ -5,8 +5,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.News;
+import com.seweb.backend.domain.Staff;
+import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.json.JsonUtil;
+import com.seweb.backend.mapper.AuthMapper;
 import com.seweb.backend.repository.NewsRepository;
+import org.hibernate.sql.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.awt.geom.AreaOp;
@@ -15,47 +19,131 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class NewsService extends BaseService<News> {
+public class NewsService extends TextService<News> {
 
     @Autowired
     private NewsRepository newsRepository;
 
-    public JSONArray queryAllNews(){
-        //一键查询，返回所有
-        return JsonUtil.toJSONArray(newsRepository.findAll());
-    }
+    private static final String TBL_NAME = "tbl_text_news";
 
+    private static String ST_AUTH = "authorized";
+    private static String ST_UNAUTH = "unauthorized";
+    private static String ST_DEPRE = "deprecated";
 
-    public JSONObject queryNewsById(JSONObject params) {
-        //根据id查询
-        String id = params.getString("id");
-        return JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
-    }
-
-    public void addNews(JSONObject params) {
-        //params包括name、content
+    /**
+     *
+     * @param params : name, author, content
+     * @param createdUserId : ~
+     */
+    /*public JSONObject addNews(JSONObject params, String createdUserId) {
         News news = JSONObject.toJavaObject(params, News.class);
-        news.setId(UUID.randomUUID().toString());
-        this.saveEntity(news);
-    }
+        news.setStatus(ST_UNAUTH);
+        this.saveEntity(news,createdUserId);
+        JSONObject idJson = new JSONObject();
+        idJson.put("id", news.getId());
+        return idJson;
+    }*/
 
-    public void deleteNews(JSONObject params) {
-        //根据id删除
+
+    /** If unauthorized, delete straightforward
+     * else create a deprecated copy & wait for auth
+     *
+     * @param params : newsId
+     * @param userId :
+     */
+    /*public void deleteNews(JSONObject params, String userId) {
         String id = params.getString("id");
-        this.deleteEntity(id);
-    }
+        News news = newsRepository.findById(params.getString("id")).get();
+        if(news.getStatus().equals(ST_UNAUTH))
+            this.deleteEntity(id);
+        else {
+            JSONObject draftJson = JSON.parseObject(JSON.toJSONString(news));
+            News draft = JSONObject.toJavaObject(draftJson, News.class);
+            draft.setId(UUID.randomUUID().toString());
+            draft.setParent(id);
+            draft.setStatus(ST_DEPRE);
+            this.saveEntity(draft,userId);
+        }
+    }*/
 
-    public void editNews(JSONObject params) {
-        //params包括id、name、content其中，以id为主
-        //其他消息会被置为null
-        String id = params.getString("id");
-        String name=params.getString("name");
-        String content=params.getString("content");
 
-        JSONObject tp=JSON.parseObject(JSON.toJSONString(newsRepository.findById(id)));
-        News news = JSONObject.toJavaObject(tp, News.class);
-        news.setName(name);
-        news.setContent(content);
+    /**If unauthorized, edit straightforward
+     * else create an unauthorized new copy & wait for auth
+     *
+     * @param params : name, author, content
+     * @param alteredUserId : ~
+     */
+    /*public void editNews(JSONObject params, String alteredUserId) {
+        News news = newsRepository.findById(params.getString("id")).get();
+        News draft = JSONObject.toJavaObject(params, News.class);
+        if(news.getStatus().equals(ST_UNAUTH)){
+            if(draft.getName() != null) news.setName(draft.getName());
+            if(draft.getAuthor() != null) news.setAuthor(draft.getAuthor());
+            if(draft.getContent() != null) news.setContent(draft.getContent());
+            this.updateEntity(news, alteredUserId);
+        }
+        else{
+            draft.setParent(params.getString("id"));
+            draft.setStatus(ST_UNAUTH);
+            this.saveEntity(draft, alteredUserId);
+        }
+    }*/
 
-    }
+    /**Case 1. ADD (NEW)
+     * Case 2. CHANGE (EDIT)
+     * Case 3. DELETE
+     *
+     * Accept:  Case 1. Set status of new news to "authorized".
+     *          Case 2. Set status of changed news to "authorized", copy creating message and delete old news.
+     *          Case 3. Delete both the deprecated copy and its parent.
+     * Refuse:  Case 1. Do nothing.
+     *          Case 2. Do nothing.
+     *          Case 3. Delete the deprecated copy.
+     *
+     * @param params : id, reply:{accept, refuse}
+     * @throws Exception : ~
+     */
+    /*public void handleAuthReply(JSONObject params) throws Exception{
+        String reply = params.getString("reply");
+        News news = newsRepository.findById(params.getString("id")).get();
+        String parentId = news.getParent();
+        String status = news.getStatus();
+
+        *//* TODO: Send Notice *//*
+        if("accept".equals(reply)) {
+            if(parentId == null) {*//* ADD *//*
+                news.setStatus(ST_AUTH);
+            }
+            else {
+                if(status.equals(ST_UNAUTH)) {*//* CHANGE *//*
+                    News parent = newsRepository.findById(parentId).get();
+                    news.setCreatedTime(parent.getCreatedTime());
+                    news.setCreatedUserId(parent.getCreatedUserId());
+                    newsRepository.deleteById(parentId);
+                    news.setStatus(ST_AUTH);
+                    this.updateEntity(news,news.getCreatedUserId());
+
+                }
+                else if(status.equals(ST_DEPRE)){*//* DELETE *//*
+                    newsRepository.deleteById(params.getString("id"));
+                    newsRepository.deleteById(parentId);
+                }
+                else {
+                    throw new Exception("Undefined text status");
+                }
+            }
+        }
+        else if("refuse".equals(reply)) {
+            if(status.equals(ST_DEPRE)) {
+                newsRepository.deleteById(params.getString("id"));
+            }
+        }
+        else {
+            throw new Exception("Undefined reply");
+        }
+    }*/
+
+
+
+
 }

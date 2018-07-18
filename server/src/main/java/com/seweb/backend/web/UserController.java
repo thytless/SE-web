@@ -18,8 +18,7 @@ public class UserController extends BaseController{
     private StaffService staffService;
 
     @RequestMapping(value = "/home/staffRegister")
-    public Response register(Request request)
-    {
+    public Response register(Request request) {
         Response response = new Response();
 
         try
@@ -80,25 +79,6 @@ public class UserController extends BaseController{
         try{
             response.status = ResponseType.SUCCESS;
             response.data = staffService.queryAllStaff();
-            response.message = "";
-        }
-        catch (Exception e){
-            e.printStackTrace();
-
-            response.status = ResponseType.FAILURE;
-            response.message = e.getMessage();
-        }
-
-        return response;
-    }
-
-    @RequestMapping(value = "/manage/critical/staffRoles")
-    public Response queryStaffRoles(Request request){
-        Response response = new Response();
-
-        try{
-            response.status = ResponseType.SUCCESS;
-            response.data = staffService.queryStaffRoles(request.getParams());
             response.message = "";
         }
         catch (Exception e){
