@@ -16,7 +16,7 @@ public class GuidanceController extends TextController{
     @Autowired
     private GuidanceService guidanceService;
 
-    @RequestMapping(value = "/Guidance")
+    @RequestMapping(value = "/home/guidance")
     public Response queryAllGuidance(Request request)
     {
         Response response = new Response();
@@ -24,7 +24,7 @@ public class GuidanceController extends TextController{
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = guidanceService.queryAllGuidance();
+            response.data = guidanceService.queryAll();
             response.message = "";
         }
         catch(Exception e)
@@ -37,14 +37,14 @@ public class GuidanceController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/queryGuidance")
+    @RequestMapping(value = "/home/guidance/query")
     public Response queryGuidance(Request request){
         Response response = new Response();
 
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = guidanceService.queryGuidanceById(request.getParams());
+            response.data = guidanceService.queryById(request.getParams());
             response.message = "";
 
         }
@@ -59,12 +59,12 @@ public class GuidanceController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/addGuidance")
+    @RequestMapping(value = "/manage/content/guidance/add")
     public Response addGuidance(Request request) {
         Response response = new Response();
 
         try {
-            guidanceService.addGuidance(request.getParams());
+            guidanceService.add(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
 
         }
@@ -79,11 +79,11 @@ public class GuidanceController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/deleteGuidance")
+    @RequestMapping(value = "/manage/content/guidance/delete")
     public Response deleteGuidance(Request request) {
         Response response = new Response();
         try {
-            guidanceService.deleteGuidance(request.getParams());
+            guidanceService.delete(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
             response.message = "";
 
@@ -99,11 +99,11 @@ public class GuidanceController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/editGuidance")
+    @RequestMapping(value = "/manage/content/guidance/edit")
     public Response editGuidance(Request request) {
         Response response = new Response();
         try {
-            guidanceService.editGuidance(request.getParams());
+            guidanceService.edit(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
 
         }

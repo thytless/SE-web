@@ -20,7 +20,7 @@ public class AboutController extends TextController{
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = aboutService.getAbout();
+            response.data = aboutService.queryAll();
             response.message = "";
         }
         catch(Exception e)
@@ -34,7 +34,7 @@ public class AboutController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/about/edit")
+    @RequestMapping(value = "/manage/content/about/edit")
     public Response editAbout(Request request)
     {
         Response response = new Response();
@@ -42,7 +42,7 @@ public class AboutController extends TextController{
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = aboutService.editAbout(request.getParams());
+            aboutService.edit(request.getParams(),request.getUser().getId());
             response.message = "";
         }
         catch(Exception e)

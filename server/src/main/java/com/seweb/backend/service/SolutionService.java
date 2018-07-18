@@ -14,46 +14,30 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class SolutionService extends BaseService<Solution>{
+public class SolutionService extends TextService<Solution>{
     @Autowired
     private SolutionRepository solutionRepository;
 
-    public JSONArray queryAllSolution(){
-        //一键查询，返回所有
-        return JsonUtil.toJSONArray(solutionRepository.findAll());
-    }
-
-
-    public JSONObject querySolutionById(JSONObject params) {
-        //根据id查询
-        String id = params.getString("id");
-        return JSON.parseObject(JSON.toJSONString(solutionRepository.findById(id)));
-    }
-
-    public void addSolution(JSONObject params) {
-        //params包括name、content
-        Solution solution = JSONObject.toJavaObject(params, Solution.class);
-        solution.setId(UUID.randomUUID().toString());
-        this.saveEntity(solution);
-    }
-
-    public void deleteSolution(JSONObject params) {
-        //根据id删除
-        String id = params.getString("id");
-        this.deleteEntity(id);
-    }
-
-    public void editSolution(JSONObject params) {
-        //params包括id、name、content其中，以id为主
-        //其他消息会被置为null
-        String id = params.getString("id");
-        String name=params.getString("name");
-        String content=params.getString("content");
-
-        JSONObject tp=JSON.parseObject(JSON.toJSONString(solutionRepository.findById(id)));
-        Solution solution = JSONObject.toJavaObject(tp, Solution.class);
-        solution.setName(name);
-        solution.setContent(content);
-
+    /**If unauthorized, edit straightforward
+     * else create an unauthorized new copy & wait for auth
+     *
+     * @param params : name, content, introduction
+     * @param alteredUserId : ~
+     */
+    @Override
+    public void edit(JSONObject params, String alteredUserId) {
+        Solution solution = solutionRepository.findById(params.getString("id")).get();
+        Solution draft = JSONObject.toJavaObject(params, Solution.class);
+        if(solution.getStatus().equals(ST_UNAUTH)){
+            if(draft.getName() != null) solution.setName(draft.getName());
+            if(draft.getContent() != null) solution.setContent(draft.getContent());
+            if(draft.getIntroduction() != null) solution.setIntroduction(draft.getIntroduction());
+            this.updateEntity(solution, alteredUserId);
+        }
+        else{
+            draft.setParent(params.getString("id"));
+            draft.setStatus(ST_UNAUTH);
+            this.saveEntity(draft, alteredUserId);
+        }
     }
 }

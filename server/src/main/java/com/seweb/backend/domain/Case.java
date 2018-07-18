@@ -7,4 +7,13 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_text_case")
 public class Case extends Text{
+    private short category;
+
+    public short getCategory() {
+        return category;
+    }
+
+    public void setCategory(short category) {
+        this.category = category;
+    }
 }

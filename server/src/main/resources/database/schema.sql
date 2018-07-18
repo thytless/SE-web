@@ -21,3 +21,10 @@ INSERT INTO `tbl_sys_role` VALUES
 ('role110',NULL,NULL,'1',NULL,NULL,NULL,'news maintainer',NULL,'MNews'),
 ('role777',NULL,NULL,'0',NULL,NULL,NULL,'administrator',NULL,'Admin');
 
+CREATE TABLE `tbl_category` (
+  `id` int COLLATE utf8_bin primary key not null auto_increment,
+  `name` varchar(255) COLLATE utf8_bin NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+INSERT INTO `tbl_category` (name)VALUES
+

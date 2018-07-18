@@ -5,9 +5,8 @@ import javax.persistence.*;
 @MappedSuperclass
 public class Text extends BaseEntity{
 
+    @Column(length = 102400)
     private String content;
-
-    private String author;
 
     private String parent;
 
@@ -17,14 +16,6 @@ public class Text extends BaseEntity{
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getParent() {

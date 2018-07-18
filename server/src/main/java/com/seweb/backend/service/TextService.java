@@ -8,6 +8,7 @@ import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.repository.TextRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class TextService<T extends Text> extends BaseService<T>{
@@ -19,9 +20,9 @@ public class TextService<T extends Text> extends BaseService<T>{
         this.textRepository = textRepository;
     }
 
-    private static final String ST_AUTH = "authorized";
-    private static final String ST_UNAUTH = "unauthorized";
-    private static final String ST_DEPRE = "deprecated";
+    static final String ST_AUTH = "authorized";
+    static final String ST_UNAUTH = "unauthorized";
+    static final String ST_DEPRE = "deprecated";
 
     /**
      *
@@ -72,7 +73,6 @@ public class TextService<T extends Text> extends BaseService<T>{
         T draft = (T)JSONObject.toJavaObject(params, Text.class);
         if(news.getStatus().equals(ST_UNAUTH)){
             if(draft.getName() != null) news.setName(draft.getName());
-            if(draft.getAuthor() != null) news.setAuthor(draft.getAuthor());
             if(draft.getContent() != null) news.setContent(draft.getContent());
             this.updateEntity(news, alteredUserId);
         }
@@ -110,9 +110,16 @@ public class TextService<T extends Text> extends BaseService<T>{
      * @param params : id, reply:{accept, refuse}
      * @throws Exception : ~
      */
-    public void handleAuthReply(JSONObject params) throws Exception{
+    public boolean handleAuthReply(JSONObject params) throws Exception{
         String reply = params.getString("reply");
-        T text = textRepository.findById(params.getString("id")).get();
+        Optional<T> textOptional = textRepository.findById(params.getString("id"));
+        T text = null;
+        if(textOptional != null && textOptional.isPresent()){
+            text = textOptional.get();
+        }
+        else {
+            return false;
+        }
         String parentId = text.getParent();
         String status = text.getStatus();
 
@@ -148,6 +155,7 @@ public class TextService<T extends Text> extends BaseService<T>{
         else {
             throw new Exception("Undefined reply");
         }
+        return true;
     }
 
     public JSONArray queryByStatus(String status){

@@ -17,14 +17,13 @@ public class SolutionController extends BaseController{
     @Autowired
     private SolutionService solutionService;
 
-    @RequestMapping(value = "/Solution")
-    public Response queryAllSolution(Request request)
-    {
+    @RequestMapping(value = "/home/solution")
+    public Response queryAllSolution(Request request) {
         Response response = new Response();
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = solutionService.queryAllSolution();
+            response.data = solutionService.queryAll();
             response.message = "";
         }
         catch(Exception e)
@@ -36,14 +35,14 @@ public class SolutionController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/querySolution")
+    @RequestMapping(value = "/home/solution/query")
     public Response querySolution(Request request){
         Response response = new Response();
 
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = solutionService.querySolutionById(request.getParams());
+            response.data = solutionService.queryById(request.getParams());
             response.message = "";
 
         }
@@ -58,12 +57,12 @@ public class SolutionController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/addSolution")
+    @RequestMapping(value = "/manage/content/solution/add")
     public Response addSolution(Request request) {
         Response response = new Response();
 
         try {
-            solutionService.addSolution(request.getParams());
+            solutionService.add(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
 
         }
@@ -78,11 +77,11 @@ public class SolutionController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/deleteSolution")
+    @RequestMapping(value = "/manage/content/solution/delete")
     public Response deleteNews(Request request) {
         Response response = new Response();
         try {
-            solutionService.deleteSolution(request.getParams());
+            solutionService.delete(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
             response.message = "";
 
@@ -98,11 +97,11 @@ public class SolutionController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/editSolution")
+    @RequestMapping(value = "/manage/content/solution/edit")
     public Response editNews(Request request) {
         Response response = new Response();
         try {
-            solutionService.editSolution(request.getParams());
+            solutionService.edit(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
 
         }

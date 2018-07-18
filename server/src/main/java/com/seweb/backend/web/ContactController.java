@@ -16,7 +16,7 @@ public class ContactController extends TextController{
     @Autowired
     private ContactService contactService;
 
-    @RequestMapping(value = "/contact")
+    @RequestMapping(value = "/home/contact")
     public Response queryAllContact(Request request)
     {
         Response response = new Response();
@@ -24,7 +24,7 @@ public class ContactController extends TextController{
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = contactService.queryAllContact();
+            response.data = contactService.queryAll();
             response.message = "";
         }
         catch(Exception e)
@@ -38,14 +38,14 @@ public class ContactController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/queryContact")
+    @RequestMapping(value = "/home/contact/query")
     public Response queryContact(Request request){
         Response response = new Response();
 
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = contactService.queryContactById(request.getParams());
+            response.data = contactService.queryById(request.getParams());
             response.message = "";
 
         }
@@ -60,12 +60,12 @@ public class ContactController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/addContact")
+    @RequestMapping(value = "/manage/content/contact/add")
     public Response addContact(Request request) {
         Response response = new Response();
 
         try {
-            contactService.addContact(request.getParams());
+            contactService.add(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
 
         }
@@ -80,11 +80,11 @@ public class ContactController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/deleteContact")
+    @RequestMapping(value = "/manage/content/contact/delete")
     public Response deleteContact(Request request) {
         Response response = new Response();
         try {
-            contactService.deleteContact(request.getParams());
+            contactService.delete(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
             response.message = "";
 
@@ -100,11 +100,11 @@ public class ContactController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/editContact")
+    @RequestMapping(value = "/manage/content/contact/edit")
     public Response editContact(Request request) {
         Response response = new Response();
         try {
-            contactService.editContact(request.getParams());
+            contactService.edit(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
 
         }

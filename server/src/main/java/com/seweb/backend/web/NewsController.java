@@ -74,26 +74,6 @@ public class NewsController extends TextController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/critical/news/list")
-    public Response queryAllNews() {
-        Response response = new Response();
-
-        try
-        {
-            response.status = ResponseType.SUCCESS;
-            response.data = newsService.queryAll();
-            response.message = "";
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            response.status = ResponseType.FAILURE;
-            response.message = e.getMessage();
-        }
-
-        return response;
-    }
-
     @RequestMapping(value = "/manage/news/add")
     public Response addNews(Request request) {
         Response response = new Response();
@@ -141,6 +121,28 @@ public class NewsController extends TextController{
             newsService.concurrenceTest(request.getParams());
             newsService.edit(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
+            response.message = "";
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/manage/news/pictureBind")
+    public Response bindNews(Request request) {
+        Response response = new Response();
+
+        try {
+            newsService.bindNews(request.getParams());
+            response.status = ResponseType.SUCCESS;
+            response.message = "";
         }
         catch(Exception e)
         {

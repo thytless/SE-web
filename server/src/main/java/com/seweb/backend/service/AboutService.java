@@ -15,20 +15,4 @@ public class AboutService extends TextService<About>{
 
     @Autowired
     private AboutRepository aboutRepository;
-
-    public JSONObject getAbout() throws Exception{
-        List<About> aboutList = aboutRepository.findAll();
-        if(aboutList.size() == 0){
-            throw new Exception("No enabled ABOUT.");
-        }
-
-        return JSON.parseObject(JSON.toJSONString(aboutList.get(0)));
-    }
-
-    public JSONObject editAbout(JSONObject params){
-        About about = aboutRepository.findAll().get(0);
-        about.setContent(params.getString("content"));
-        updateEntity(about,params.getString("alteredUserId"));
-        return JSON.parseObject(JSON.toJSONString(about));
-    }
 }

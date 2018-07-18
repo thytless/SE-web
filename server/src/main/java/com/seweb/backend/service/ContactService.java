@@ -13,40 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class ContactService extends BaseService<Contact>{
+public class ContactService extends TextService<Contact>{
     @Autowired
     private ContactRepository contactRepository;
 
-    public JSONArray queryAllContact(){ return JsonUtil.toJSONArray(contactRepository.findAll()); }
-
-    public JSONObject queryContactById(JSONObject params) {
-        String id = params.getString("id");
-        //System.out.println(id);
-        return JSON.parseObject(JSON.toJSONString(contactRepository.findById(id)));
-    }
-
-    public void addContact(JSONObject params) {
-        Contact contact = JSONObject.toJavaObject(params, Contact.class);
-        contact.setId(UUID.randomUUID().toString());
-        this.saveEntity(contact);
-
-    }
-
-    public void deleteContact(JSONObject params) {
-        String id = params.getString("id");
-        this.deleteEntity(id);
-    }
-
-    public void editContact(JSONObject params) {
-        //Contact contact = JSONObject.toJavaObject(params, Contact.class);
-        //this.updateEntity(contact);
-        String id = params.getString("id");
-        String name=params.getString("name");
-        String content=params.getString("content");
-
-        JSONObject tp=JSON.parseObject(JSON.toJSONString(contactRepository.findById(id)));
-        Contact contact = JSONObject.toJavaObject(tp, Contact.class);
-        contact.setName(name);
-        contact.setContent(content);
-    }
 }

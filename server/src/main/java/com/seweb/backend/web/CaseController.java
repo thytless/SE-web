@@ -16,13 +16,13 @@ public class CaseController extends TextController {
     @Autowired
     private CaseService caseService;
 
-    @RequestMapping(value = "/case")
+    @RequestMapping(value = "/home/case")
     public Response queryAllCase(Request request) {
         Response response = new Response();
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = caseService.queryAllCase();
+            response.data = caseService.queryAll();
             response.message = "";
         }
         catch(Exception e)
@@ -35,14 +35,14 @@ public class CaseController extends TextController {
         return response;
     }
 
-    @RequestMapping(value = "/queryCase")
+    @RequestMapping(value = "/home/case/query")
     public Response queryCase(Request request){
         Response response = new Response();
 
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = caseService.queryCaseById(request.getParams());
+            response.data = caseService.queryById(request.getParams());
             response.message = "";
 
         }
@@ -57,12 +57,12 @@ public class CaseController extends TextController {
         return response;
     }
 
-    @RequestMapping(value = "/addCase")
-    public Response addNews(Request request) {
+    @RequestMapping(value = "/manage/content/case/add")
+    public Response addCase(Request request) {
         Response response = new Response();
 
         try {
-            caseService.addCase(request.getParams());
+            caseService.add(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
 
         }
@@ -77,13 +77,12 @@ public class CaseController extends TextController {
         return response;
     }
 
-    @RequestMapping(value = "/deleteCase")
-    public Response deleteNews(Request request) {
+    @RequestMapping(value = "/manage/content/case/delete")
+    public Response deleteCase(Request request) {
         Response response = new Response();
         try {
-            caseService.deleteCase(request.getParams());
+            caseService.delete(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
-            response.data = caseService.queryCaseById(request.getParams());
             response.message = "";
 
         }
@@ -98,13 +97,13 @@ public class CaseController extends TextController {
         return response;
     }
 
-    @RequestMapping(value = "/editCase")
-    public Response editNews(Request request) {
+    @RequestMapping(value = "/manage/content/case/edit")
+    public Response editCase(Request request) {
         Response response = new Response();
         try {
-            caseService.editCase(request.getParams());
+            caseService.edit(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
-
+            response.message = "";
         }
         catch(Exception e)
         {
