@@ -1,6 +1,8 @@
 package com.seweb.backend.web;
 
 import com.alibaba.fastjson.JSONObject;
+import com.seweb.backend.service.NoticeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -12,6 +14,7 @@ import java.util.List;
 @RequestMapping("")
 public class BaseController
 {
+
     @Deprecated
     public HashMap<String, Object> processMultipartRequest(MultipartHttpServletRequest request)
     {

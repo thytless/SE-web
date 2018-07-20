@@ -4,7 +4,6 @@ import com.seweb.backend.framework.core.web.Request;
 import com.seweb.backend.framework.core.web.Response;
 import com.seweb.backend.framework.core.web.ResponseType;
 import com.seweb.backend.service.GuidanceService;
-import com.seweb.backend.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-public class GuidanceController extends TextController{
+public class GuidanceController extends BaseController {
     @Autowired
     private GuidanceService guidanceService;
 

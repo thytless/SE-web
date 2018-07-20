@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-public class NewsController extends TextController{
+public class NewsController extends BaseController {
 
     @Autowired
     private NewsService newsService;
@@ -47,26 +47,6 @@ public class NewsController extends TextController{
         {
             e.printStackTrace();
 
-            response.status = ResponseType.FAILURE;
-            response.message = e.getMessage();
-        }
-
-        return response;
-    }
-
-    @RequestMapping(value = "/manage/news/list")
-    public Response queryNewsByAuthor(Request request) {
-        Response response = new Response();
-
-        try
-        {
-            response.status = ResponseType.SUCCESS;
-            response.data = newsService.queryByAuthor(request.getParams());
-            response.message = "";
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
             response.status = ResponseType.FAILURE;
             response.message = e.getMessage();
         }

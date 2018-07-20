@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-public class ContentAuthController extends TextController {
+public class ContentAuthController extends BaseController {
 
     @Autowired
     private AboutService aboutService;

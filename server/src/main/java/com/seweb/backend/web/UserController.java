@@ -57,9 +57,29 @@ public class UserController extends BaseController{
         try{
             response.status = ResponseType.SUCCESS;
             JSONObject params = request.getParams();
-            if(request.getUser().getUsername() != params.getString("username"))
+            if(!request.getUser().getUsername().equals(params.getString("username")))
                 throw new Exception("Access Denied! You cannot edit other's profile.");
             staffService.updateStaff(request.getParams(),request.getUser().getId());
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/manage/critical/editStaff")
+    public Response updateStaff(Request request){
+        Response response = new Response();
+
+        try{
+            response.status = ResponseType.SUCCESS;
+            staffService.updateStaff(request.getParams(),request.getUser().getId());
+            staffService.updateStaffRoles(request.getParams());
             response.message = "";
         }
         catch (Exception e){

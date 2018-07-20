@@ -23,8 +23,6 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
     @Override
     public boolean supportsParameter(MethodParameter methodParameter)
     {
-    	System.out.println("请求是否为Request类型："+methodParameter.getParameterType().equals(Request.class));
-    	//如果controller的形参为Request对象，则返回true，表示需要处理该参数分解，调用下面的resolveArgument处理
         return methodParameter.getParameterType().equals(Request.class);
     }
  
@@ -33,8 +31,6 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception 
     {
     	Request request = new Request();
-
-		System.out.println("RequestInfo: "+webRequest);
 
     	//通过请求中的参数username设置request的user&userType
     	String username = webRequest.getParameter("username");
@@ -65,7 +61,7 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 			}
 
 		}
-
+		System.out.println("UserId: " + request.getUser().getId());
 
     	/* END */
 
@@ -76,7 +72,7 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
         JSONObject params = JSONObject.parseObject(paramsString);
         
         request.setParams(params);
-		System.out.println("Params: "+paramsString);
+		System.out.println("Params: " + paramsString);
 
         return request;
     }

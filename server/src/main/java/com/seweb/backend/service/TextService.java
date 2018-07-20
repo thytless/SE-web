@@ -3,11 +3,15 @@ package com.seweb.backend.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.seweb.backend.domain.Notice;
 import com.seweb.backend.domain.Text;
+import com.seweb.backend.framework.utils.date.DateUtil;
 import com.seweb.backend.framework.utils.json.JsonUtil;
+import com.seweb.backend.mapper.NoticeMapper;
 import com.seweb.backend.repository.TextRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,13 +20,17 @@ public class TextService<T extends Text> extends BaseService<T>{
     public TextRepository<T> textRepository;
 
     @Autowired
+    public NoticeMapper noticeMapper;
+
+    @Autowired
     public void setTextRepository(TextRepository<T> textRepository) {
         this.textRepository = textRepository;
     }
 
-    static final String ST_AUTH = "authorized";
-    static final String ST_UNAUTH = "unauthorized";
-    static final String ST_DEPRE = "deprecated";
+    private static final String AUTH_ACCEPT_STRING = "Your commit was accepted.";
+    private static final String AUTH_REFUSE_STRING = "Your commit was declined.";
+    private static final String NAME_STRING = "Name: ";
+    private static final String INFO_STRING = "Info: ";
 
     /**
      *
@@ -31,7 +39,7 @@ public class TextService<T extends Text> extends BaseService<T>{
      * @return id of new text
      */
     public JSONObject add(JSONObject params, String createdUserId) {
-        T text = (T)JSONObject.toJavaObject(params, Text.class);
+        T text = toObject(params);
         text.setStatus(ST_UNAUTH);
         this.saveEntity(text,createdUserId);
         JSONObject idJson = new JSONObject();
@@ -48,12 +56,12 @@ public class TextService<T extends Text> extends BaseService<T>{
      */
     public void delete(JSONObject params, String userId) {
         String id = params.getString("id");
-        T text = textRepository.findById(params.getString("id")).get();
+        T text = textRepository.findById(id).get();
         if(text.getStatus().equals(ST_UNAUTH))
             this.deleteEntity(id);
         else {
             JSONObject draftJson = JSON.parseObject(JSON.toJSONString(text));
-            T draft = (T)JSONObject.toJavaObject(draftJson, Text.class);
+            T draft = toObject(draftJson);
             draft.setId(UUID.randomUUID().toString());
             draft.setParent(id);
             draft.setStatus(ST_DEPRE);
@@ -69,15 +77,17 @@ public class TextService<T extends Text> extends BaseService<T>{
      * @param alteredUserId : ~
      */
     public void edit(JSONObject params, String alteredUserId) {
-        T news = textRepository.findById(params.getString("id")).get();
-        T draft = (T)JSONObject.toJavaObject(params, Text.class);
+        String id = params.getString("id");
+        T news = textRepository.findById(id).get();
+        T draft = toObject(params);
         if(news.getStatus().equals(ST_UNAUTH)){
             if(draft.getName() != null) news.setName(draft.getName());
             if(draft.getContent() != null) news.setContent(draft.getContent());
             this.updateEntity(news, alteredUserId);
         }
         else{
-            draft.setParent(params.getString("id"));
+            draft.setId(UUID.randomUUID().toString());
+            draft.setParent(id);
             draft.setStatus(ST_UNAUTH);
             this.saveEntity(draft, alteredUserId);
         }
@@ -135,6 +145,7 @@ public class TextService<T extends Text> extends BaseService<T>{
                     text.setCreatedUserId(parent.getCreatedUserId());
                     textRepository.deleteById(parentId);
                     text.setStatus(ST_AUTH);
+                    text.setParent(null);
                     this.updateEntity(text,text.getCreatedUserId());
 
                 }
@@ -146,11 +157,13 @@ public class TextService<T extends Text> extends BaseService<T>{
                     throw new Exception("Undefined text status");
                 }
             }
+            addAcceptNotice(text.getCreatedUserId(),text.getName(),DateUtil.formatDateTime(new Date()));
         }
         else if("refuse".equals(reply)) {
             if(status.equals(ST_DEPRE)) {
                 textRepository.deleteById(params.getString("id"));
             }
+            addRefuseNotice(text.getCreatedUserId(),text.getName(),DateUtil.formatDateTime(new Date()),params.getString("info"));
         }
         else {
             throw new Exception("Undefined reply");
@@ -170,11 +183,25 @@ public class TextService<T extends Text> extends BaseService<T>{
         return JSON.parseObject(JSON.toJSONString(textRepository.findById(params.getString("id"))));
     }
 
-    public JSONArray queryByAuthor(JSONObject params) {
-        return JsonUtil.toJSONArray((textRepository.findByCreatedUserId(params.getString("createdUserId"))));
-    }
-
     public void concurrenceTest(JSONObject params) throws Exception{
         concurrenceTest(params,textRepository);
+    }
+
+    public T toObject(JSONObject params) {
+        return null;
+    }
+
+    private void addNotice(String targetUserId, String title, String content, String time) {
+        noticeMapper.addNotice(UUID.randomUUID().toString(),targetUserId,title,content,time);
+    }
+
+    private void addAcceptNotice(String targetUserId, String name, String time) {
+        String string = NAME_STRING + name + "\n";
+        addNotice(targetUserId,AUTH_ACCEPT_STRING,string,time);
+    }
+
+    private void addRefuseNotice(String targetUserId, String name, String time, String info) {
+        String string = NAME_STRING + name + "\n" + INFO_STRING + info + "\n";
+        addNotice(targetUserId,AUTH_REFUSE_STRING,string,time);
     }
 }

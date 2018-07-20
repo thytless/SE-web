@@ -64,6 +64,7 @@ public class SolutionController extends BaseController{
         try {
             solutionService.add(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
+            response.message = "";
 
         }
         catch(Exception e)
@@ -103,6 +104,7 @@ public class SolutionController extends BaseController{
         try {
             solutionService.edit(request.getParams(),request.getUser().getId());
             response.status = ResponseType.SUCCESS;
+            response.message = "";
 
         }
         catch(Exception e)

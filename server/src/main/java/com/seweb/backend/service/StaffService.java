@@ -8,7 +8,6 @@ import com.seweb.backend.domain.Staff;
 import com.seweb.backend.framework.utils.encryption.MD5Util;
 import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.mapper.StaffRoleMapper;
-import com.seweb.backend.mapper.AuthMapper;
 import com.seweb.backend.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +25,6 @@ public class StaffService extends UserService<Staff> {
     @Autowired
     private StaffRoleMapper staffRoleMapper;
 
-    @Autowired
-    private AuthMapper authMapper;
-
-    private static final String TBL_NAME = "tbl_sys_staff";
-
     public void addStaff(JSONObject params) throws Exception{
         Staff staff = JSONObject.toJavaObject(params, Staff.class);
 
@@ -40,7 +34,7 @@ public class StaffService extends UserService<Staff> {
 
         staff.setId(staffId);
 
-        staff.setStatus("unauthorized");
+        staff.setStatus(ST_UNAUTH);
 
         updateStaffRoles(params,staffId);
 
@@ -72,7 +66,7 @@ public class StaffService extends UserService<Staff> {
 
 
     public JSONArray queryAllStaff(){
-        return queryStaffByStatus("authorized");
+        return queryStaffByStatus(ST_AUTH);
     }
 
     public JSONArray queryStaffByStatus(String status){
@@ -106,7 +100,7 @@ public class StaffService extends UserService<Staff> {
                         String roleId = roleList.get(0).getId();
                         List<String> staffRoleList = staffRoleMapper.getStaffRole(staffId);
                         //if(staffRoleList != null && !staffRoleList.contains(roleId))
-                        if(!staffRoleList.contains(roleId))
+
                             staffRoleMapper.addStaffRole(staffId,roleId);
                     }
                 }
@@ -138,5 +132,11 @@ public class StaffService extends UserService<Staff> {
             }
         }
         return new String(roleString);
+    }
+
+    public void authorize(JSONObject params) {
+        Staff staff = staffRepository.findById(params.getString("id")).get();
+        staff.setStatus(ST_AUTH);
+        this.updateEntity(staff);
     }
 }

@@ -1,13 +1,9 @@
 package com.seweb.backend.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.BaseEntity;
-import com.seweb.backend.domain.User;
 import com.seweb.backend.framework.utils.date.DateUtil;
-import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.framework.utils.string.StringUtil;
-import com.seweb.backend.mapper.AuthMapper;
 import com.seweb.backend.repository.BaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,10 +18,9 @@ public class BaseService<T extends BaseEntity>
 {
     public BaseRepository<T> baseRepository;
 
-    @Autowired
-    private AuthMapper authMapper;
-
-    private static String TBL_NAME;
+    static final String ST_AUTH = "authorized";
+    static final String ST_UNAUTH = "unauthorized";
+    static final String ST_DEPRE = "deprecated";
 
     @Autowired
     public void setBaseRepository(BaseRepository<T> baseRepository) {
@@ -73,7 +68,7 @@ public class BaseService<T extends BaseEntity>
 
     public T updateEntity(T entity) {
 
-        entity.setAlteredTime(DateUtil.formatTime(new Date()));
+        entity.setAlteredTime(DateUtil.formatDateTime(new Date()));
 
         baseRepository.save(entity);
         return entity;
@@ -85,14 +80,10 @@ public class BaseService<T extends BaseEntity>
             entity.setAlteredUserId(alteredUserId);
         }
 
-        entity.setAlteredTime(DateUtil.formatTime(new Date()));
+        entity.setAlteredTime(DateUtil.formatDateTime(new Date()));
 
         baseRepository.save(entity);
         return entity;
-    }
-
-    public void authorize(JSONObject params){
-        authMapper.authorize(params.getString("id"),TBL_NAME);
     }
 
     public void concurrenceTest(JSONObject params, BaseRepository<T> repository) throws Exception{

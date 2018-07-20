@@ -5,14 +5,13 @@ import com.seweb.backend.framework.core.web.Response;
 import com.seweb.backend.framework.core.web.ResponseType;
 import com.seweb.backend.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-public class ContactController extends TextController{
+public class ContactController extends BaseController {
     @Autowired
     private ContactService contactService;
 

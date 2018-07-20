@@ -1,26 +1,26 @@
 package com.seweb.backend.web;
 
 import com.seweb.backend.framework.core.web.*;
-import com.seweb.backend.service.AboutService;
+import com.seweb.backend.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-public class AboutController extends BaseController {
+public class NoticeController extends BaseController {
 
     @Autowired
-    private AboutService aboutService;
+    private NoticeService noticeService;
 
-    @RequestMapping(value = "/home/about")
-    public Response queryAbout(Request request)
-    {
+    @RequestMapping(value = "/manage/notice")
+    public Response allNotice(Request request) {
         Response response = new Response();
 
-        try
-        {
+        try {
+            response.data = noticeService.queryNoticeByTargetUserId(request.getUser().getId());
             response.status = ResponseType.SUCCESS;
-            response.data = aboutService.queryAll();
             response.message = "";
         }
         catch(Exception e)
@@ -34,15 +34,13 @@ public class AboutController extends BaseController {
         return response;
     }
 
-    @RequestMapping(value = "/manage/content/about/edit")
-    public Response editAbout(Request request)
-    {
+    @RequestMapping(value = "/manage/notice/delete")
+    public Response deleteNotice(Request request) {
         Response response = new Response();
 
-        try
-        {
+        try {
+            noticeService.deleteNotice(request.getParams());
             response.status = ResponseType.SUCCESS;
-            aboutService.edit(request.getParams(),request.getUser().getId());
             response.message = "";
         }
         catch(Exception e)

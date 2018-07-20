@@ -3,7 +3,6 @@ package com.seweb.backend.web;
 import com.seweb.backend.framework.core.web.Request;
 import com.seweb.backend.framework.core.web.Response;
 import com.seweb.backend.framework.core.web.ResponseType;
-import com.seweb.backend.repository.CaseRepository;
 import com.seweb.backend.service.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-public class CaseController extends TextController {
+public class CaseController extends BaseController {
     @Autowired
     private CaseService caseService;
 
