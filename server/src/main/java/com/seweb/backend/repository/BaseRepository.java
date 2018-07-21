@@ -1,8 +1,6 @@
 package com.seweb.backend.repository;
 
 import com.seweb.backend.domain.BaseEntity;
-import com.seweb.backend.framework.helpers.pagination.PageResult;
-import com.seweb.backend.framework.helpers.pagination.Pager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -28,8 +26,4 @@ public interface BaseRepository<T extends BaseEntity> extends JpaRepository<T, S
     List<T> executeHql(String hql, HashMap<String, Object> paramsMap);
 
     <U> List<U> executeHqlIndicatingType(String hql, HashMap<String, Object> paramsMap);
-
-    <U> PageResult<U> executeSql(String sql, HashMap<String, Object> paramsMap, Pager pager);
-
-    PageResult<T> executeHql(String hql, HashMap<String, Object> paramsMap, Pager pager);
 }

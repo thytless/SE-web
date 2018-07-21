@@ -11,8 +11,6 @@ import javax.persistence.Query;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import com.seweb.backend.domain.BaseEntity;
-import com.seweb.backend.framework.helpers.pagination.PageResult;
-import com.seweb.backend.framework.helpers.pagination.Pager;
 
 public class BaseRepositoryImpl<T extends BaseEntity> extends SimpleJpaRepository<T, String> implements BaseRepository<T>
 {
@@ -65,41 +63,6 @@ public class BaseRepositoryImpl<T extends BaseEntity> extends SimpleJpaRepositor
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <U> PageResult<U> executeSql(String sql, HashMap<String, Object> paramsMap, Pager pager)
-	{
-		Query query = this.entityManager.createNativeQuery(sql);
-		setParams(query, paramsMap);
-		setPager(query, pager);
-		List<U> data = query.getResultList();
-		
-		String countSql = this.genCountSql(sql);
-		Query countQuery = this.entityManager.createNativeQuery(countSql);
-		setParams(countQuery, paramsMap);
-		int total =  Integer.parseInt(countQuery.getSingleResult().toString());
-
-		PageResult<U> queryResult = new PageResult<U>(total, data);
-		return queryResult;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public PageResult<T> executeHql(String hql, HashMap<String, Object> paramsMap, Pager pager) 
-	{
-		Query query = this.entityManager.createQuery(hql);
-		setParams(query, paramsMap);
-		setPager(query, pager);	
-		List<T> data = query.getResultList();
-		
-		String countHql = this.genCountSql(hql);
-		Query countQuery = this.entityManager.createQuery(countHql);
-		setParams(countQuery, paramsMap);
-		int total =  Integer.parseInt(countQuery.getSingleResult().toString());
-		
-		PageResult<T> queryResult = new PageResult<T>(total, data);
-		return queryResult;
-	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -140,20 +103,7 @@ public class BaseRepositoryImpl<T extends BaseEntity> extends SimpleJpaRepositor
 			}
 		}
 	}
-	
-	private void setPager(Query query, Pager pager)
-	{
-		if(pager != null)
-		{
-			int current = pager.current;
-			int pageSize = pager.pageSize;
-			
-			int firstIndex = pageSize * (current - 1);
-			
-			query.setFirstResult(firstIndex);
-			query.setMaxResults(pageSize);
-		}
-	}
+
 	
 	private String genCountSql(String sql)
 	{
