@@ -8,4 +8,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_text_guidance")
 public class Guidance extends Text{
+
+    private String picture;
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 }

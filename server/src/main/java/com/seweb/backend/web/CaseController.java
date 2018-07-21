@@ -21,7 +21,26 @@ public class CaseController extends BaseController {
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = caseService.queryAll();
+            response.data = caseService.queryByStatus("authorized");
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/home/case/category")
+    public Response queryCaseByCategory(Request request) {
+        Response response = new Response();
+        try
+        {
+            response.status = ResponseType.SUCCESS;
+            response.data = caseService.queryByCategory(request.getParams());
             response.message = "";
         }
         catch(Exception e)

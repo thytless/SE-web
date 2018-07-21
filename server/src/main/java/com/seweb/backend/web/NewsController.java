@@ -1,6 +1,7 @@
 package com.seweb.backend.web;
 
 import com.seweb.backend.framework.core.web.*;
+import com.seweb.backend.framework.utils.mail.MailUtil;
 import com.seweb.backend.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,26 @@ public class NewsController extends BaseController {
         {
             response.status = ResponseType.SUCCESS;
             response.data = newsService.queryByStatus("authorized");
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "/home/poster")
+    public Response queryPoster(Request request) {
+        Response response = new Response();
+
+        try
+        {
+            response.status = ResponseType.SUCCESS;
+            response.data = newsService.queryByCode("poster");
             response.message = "";
         }
         catch(Exception e)
@@ -135,7 +156,7 @@ public class NewsController extends BaseController {
         return response;
     }
 
-    @RequestMapping(value = "/manage/news/authorize/list")
+    @RequestMapping(value = "/auth/news/list")
     public Response queryAllUnauthorizedNews(Request request){
         Response response = new Response();
         try {
@@ -151,7 +172,7 @@ public class NewsController extends BaseController {
         return response;
     }
 
-    @RequestMapping(value = "/manage/news/authorize/execute")
+    @RequestMapping(value = "/auth/news/execute")
     public Response authorizeNews(Request request){
         Response response = new Response();
         try {

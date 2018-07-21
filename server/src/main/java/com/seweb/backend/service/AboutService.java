@@ -9,10 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AboutService extends TextService<About>{
 
     @Autowired
     private AboutRepository aboutRepository;
+
+    @Override
+    public About toObject(JSONObject params) {
+        return JSONObject.toJavaObject(params, About.class);
+    }
 }

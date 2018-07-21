@@ -20,7 +20,7 @@ public class AboutController extends BaseController {
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = aboutService.queryAll();
+            response.data = aboutService.queryByStatus("authorized");
             response.message = "";
         }
         catch(Exception e)

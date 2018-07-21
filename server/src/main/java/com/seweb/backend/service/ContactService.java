@@ -17,4 +17,9 @@ public class ContactService extends TextService<Contact>{
     @Autowired
     private ContactRepository contactRepository;
 
+    @Override
+    public Contact toObject(JSONObject params) {
+        return JSONObject.toJavaObject(params, Contact.class);
+    }
+
 }

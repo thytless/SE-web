@@ -52,6 +52,7 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 					throw new Exception("Username:" + username + " not exist!");
 				} else {
 					request.setUser(staff);
+					System.out.println("UserId: " + request.getUser().getId());
 				}
 			}
 
@@ -61,7 +62,7 @@ public class RequestArgumentResolver implements HandlerMethodArgumentResolver
 			}
 
 		}
-		System.out.println("UserId: " + request.getUser().getId());
+
 
     	/* END */
 

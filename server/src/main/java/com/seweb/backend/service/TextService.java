@@ -78,12 +78,12 @@ public class TextService<T extends Text> extends BaseService<T>{
      */
     public void edit(JSONObject params, String alteredUserId) {
         String id = params.getString("id");
-        T news = textRepository.findById(id).get();
+        T text = textRepository.findById(id).get();
         T draft = toObject(params);
-        if(news.getStatus().equals(ST_UNAUTH)){
-            if(draft.getName() != null) news.setName(draft.getName());
-            if(draft.getContent() != null) news.setContent(draft.getContent());
-            this.updateEntity(news, alteredUserId);
+        if(text.getStatus().equals(ST_UNAUTH)){
+            if(draft.getName() != null) text.setName(draft.getName());
+            if(draft.getContent() != null) text.setContent(draft.getContent());
+            this.updateEntity(text, alteredUserId);
         }
         else{
             draft.setId(UUID.randomUUID().toString());
@@ -141,12 +141,17 @@ public class TextService<T extends Text> extends BaseService<T>{
             else {
                 if(status.equals(ST_UNAUTH)) {/* CHANGE */
                     T parent = textRepository.findById(parentId).get();
-                    text.setCreatedTime(parent.getCreatedTime());
+                    this.handleEdit(parent,text);
+                    this.updateEntity(parent,text.getCreatedUserId());
+                    textRepository.deleteById(text.getId());
+
+                    /*text.setCreatedTime(parent.getCreatedTime());
                     text.setCreatedUserId(parent.getCreatedUserId());
                     textRepository.deleteById(parentId);
+                    text.setId(parentId);
                     text.setStatus(ST_AUTH);
                     text.setParent(null);
-                    this.updateEntity(text,text.getCreatedUserId());
+                    this.updateEntity(text,text.getCreatedUserId());*/
 
                 }
                 else if(status.equals(ST_DEPRE)){/* DELETE */
@@ -203,5 +208,10 @@ public class TextService<T extends Text> extends BaseService<T>{
     private void addRefuseNotice(String targetUserId, String name, String time, String info) {
         String string = NAME_STRING + name + "\n" + INFO_STRING + info + "\n";
         addNotice(targetUserId,AUTH_REFUSE_STRING,string,time);
+    }
+
+    private void handleEdit(T parent, T text) {
+        parent.setName(text.getName());
+        parent.setContent(text.getContent());
     }
 }

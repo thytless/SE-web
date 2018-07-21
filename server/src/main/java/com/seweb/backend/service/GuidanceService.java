@@ -18,4 +18,9 @@ import java.util.UUID;
 public class GuidanceService extends TextService<Guidance> {
     @Autowired
     private GuidanceRepository guidanceRepository;
+
+    @Override
+    public Guidance toObject(JSONObject params) {
+        return JSONObject.toJavaObject(params, Guidance.class);
+    }
 }

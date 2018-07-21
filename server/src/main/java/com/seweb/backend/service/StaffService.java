@@ -61,12 +61,17 @@ public class StaffService extends UserService<Staff> {
             throw new Exception("Admin cannot be deleted.");
         }
         staffRepository.deleteById(staffId);
+        staffRoleMapper.deleteStaffRole(staffId);
     }
 
 
 
     public JSONArray queryAllStaff(){
         return queryStaffByStatus(ST_AUTH);
+    }
+
+    public JSONObject queryStaffById(JSONObject params) {
+        return JSON.parseObject(JSON.toJSONString(staffRepository.findById(params.getString("id"))));
     }
 
     public JSONArray queryStaffByStatus(String status){

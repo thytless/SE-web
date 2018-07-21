@@ -35,62 +35,18 @@ public class SolutionController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/home/solution/query")
-    public Response querySolution(Request request){
+    @RequestMapping(value = "/home/solution/category")
+    public Response querySolutionByCategory(Request request) {
         Response response = new Response();
-
         try
         {
             response.status = ResponseType.SUCCESS;
-            response.data = solutionService.queryById(request.getParams());
+            response.data = solutionService.queryByCategory(request.getParams());
             response.message = "";
-
         }
         catch(Exception e)
         {
             e.printStackTrace();
-
-            response.status = ResponseType.FAILURE;
-            response.message = e.getMessage();
-        }
-
-        return response;
-    }
-
-    @RequestMapping(value = "/manage/content/solution/add")
-    public Response addSolution(Request request) {
-        Response response = new Response();
-
-        try {
-            solutionService.add(request.getParams(),request.getUser().getId());
-            response.status = ResponseType.SUCCESS;
-            response.message = "";
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-
-            response.status = ResponseType.FAILURE;
-            response.message = e.getMessage();
-        }
-
-        return response;
-    }
-
-    @RequestMapping(value = "/manage/content/solution/delete")
-    public Response deleteNews(Request request) {
-        Response response = new Response();
-        try {
-            solutionService.delete(request.getParams(),request.getUser().getId());
-            response.status = ResponseType.SUCCESS;
-            response.message = "";
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-
             response.status = ResponseType.FAILURE;
             response.message = e.getMessage();
         }

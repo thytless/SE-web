@@ -25,8 +25,48 @@ public class ContentAuthController extends BaseController {
     @Autowired
     private SolutionService solutionService;
 
-    @RequestMapping(value = "/manage/content/authorize/list")
-    public Response queryAllUnauthorizedNews(Request request){
+    @RequestMapping(value = "/auth/content/query")
+    public Response queryContent(Request request) {
+        Response response = new Response();
+        JSONObject params = request.getParams();
+        try {
+            String type = params.getString("type");
+            switch (type) {
+                case "about" : {
+                    response.data = aboutService.queryById(params);
+                    break;
+                }
+                case "case" : {
+                    response.data = caseService.queryById(params);
+                    break;
+                }
+                case "contact" : {
+                    response.data = contactService.queryById(params);
+                    break;
+                }
+                case "guidance" : {
+                    response.data = guidanceService.queryById(params);
+                    break;
+                }
+                case "solution" : {
+                    response.data = solutionService.queryById(params);
+                    break;
+                }
+            }
+
+            response.status = ResponseType.SUCCESS;
+            response.message = "";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/auth/content/list")
+    public Response queryAllUnauthorized(Request request){
         Response response = new Response();
         try {
             JSONObject data = new JSONObject();
@@ -48,7 +88,7 @@ public class ContentAuthController extends BaseController {
         return response;
     }
 
-    @RequestMapping(value = "/manage/content/authorize/execute")
+    @RequestMapping(value = "/auth/content/execute")
     public Response authorize(Request request){
         Response response = new Response();
         JSONObject params = request.getParams();

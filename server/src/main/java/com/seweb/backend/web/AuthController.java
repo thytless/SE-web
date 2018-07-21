@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.Staff;
 import com.seweb.backend.framework.core.web.*;
 import com.seweb.backend.framework.utils.encryption.HmacSHA256Util;
+import com.seweb.backend.framework.utils.mail.MailUtil;
 import com.seweb.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,10 @@ public class AuthController extends BaseController {
 
     @Autowired
     private StaffService staffService;
+
+    private static final String ACCEPT_TITLE = "Your register was accepted.";
+
+    private static final String REFUSE_TITLE = "Your register was refused.";
 
     @RequestMapping(value = "/home/staffLogin")
     public Response staffLogin(Request request)
@@ -50,7 +55,7 @@ public class AuthController extends BaseController {
         return response;
     }
 
-    @RequestMapping(value = "/manage/critical/authorize/list")
+    @RequestMapping(value = "/critical/authorize/list")
     public Response queryAllUnauthorizedStaff(Request request){
         Response response = new Response();
         try {
@@ -67,18 +72,20 @@ public class AuthController extends BaseController {
         return response;
     }
 
-    @RequestMapping(value = "/manage/critical/authorize/execute")
+    @RequestMapping(value = "/critical/authorize/execute")
     public Response authorizeStaff(Request request){
         Response response = new Response();
         try {
-            /* TODO: Send Email */
+            String mailAddress = staffService.queryStaffById(request.getParams()).getString("email");
             response.status = ResponseType.SUCCESS;
             String reply = request.getParams().getString("reply");
             if("accept".equals(reply)) {
                 staffService.authorize(request.getParams());
+                MailUtil.sendMail(mailAddress,ACCEPT_TITLE," ");
             }
             else if("refuse".equals(reply)) {
                 staffService.deleteStaff(request.getParams());
+                MailUtil.sendMail(mailAddress,REFUSE_TITLE,"Message from admin: "+request.getParams().getString("info"));
             }
             response.message = "";
         }

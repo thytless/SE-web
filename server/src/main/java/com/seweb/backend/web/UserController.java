@@ -72,7 +72,7 @@ public class UserController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/critical/editStaff")
+    @RequestMapping(value = "/critical/editStaff")
     public Response updateStaff(Request request){
         Response response = new Response();
 
@@ -92,7 +92,7 @@ public class UserController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/critical/allStaff")
+    @RequestMapping(value = "/critical/allStaff")
     public Response queryAllStaff(Request request){
         Response response = new Response();
 
@@ -111,7 +111,7 @@ public class UserController extends BaseController{
         return response;
     }
 
-    @RequestMapping(value = "/manage/critical/deleteStaff")
+    @RequestMapping(value = "/critical/deleteStaff")
     public Response deleteStaff(Request request){
         Response response = new Response();
 

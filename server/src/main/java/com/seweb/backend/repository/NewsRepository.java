@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface NewsRepository extends TextRepository<News> {
 
-
+    List<News> findByCode(String code);
 }

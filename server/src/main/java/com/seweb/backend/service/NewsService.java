@@ -1,8 +1,10 @@
 package com.seweb.backend.service;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seweb.backend.domain.News;
+import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class NewsService extends TextService<News> {
             if(draft.getName() != null) news.setName(draft.getName());
             if(draft.getAuthor() != null) news.setAuthor(draft.getAuthor());
             if(draft.getContent() != null) news.setContent(draft.getContent());
+            if(draft.getPicture() != null) news.setPicture(draft.getPicture());
             this.updateEntity(news, alteredUserId);
         }
         else{
@@ -51,5 +54,15 @@ public class NewsService extends TextService<News> {
     @Override
     public News toObject(JSONObject params) {
         return JSONObject.toJavaObject(params, News.class);
+    }
+
+    private void handleEdit(News parent, News text) {
+        parent.setName(text.getName());
+        parent.setAuthor(text.getAuthor());
+        parent.setContent(text.getContent());
+    }
+
+    public JSONArray queryByCode(String code) {
+        return JsonUtil.toJSONArray(newsRepository.findByCode(code));
     }
 }
