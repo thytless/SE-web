@@ -2,3 +2,5 @@ server/target/
 server/.mvn/
 server/.idea/
 server/mvn*
+*.jpg
+*.png
