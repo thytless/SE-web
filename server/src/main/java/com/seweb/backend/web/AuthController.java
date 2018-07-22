@@ -29,12 +29,6 @@ public class AuthController extends BaseController {
         {
             Staff staff = staffService.getLoginUser(request.getParams());
             JSONObject userJson = JSONObject.parseObject(JSONObject.toJSONString(staff));
-            //user中没有modules信息，但前端需要，故这里将该用户可以管理的modules发给前端，
-            //前端根据这些modules决定侧边栏显示哪些modules
-            //userJson.put("modules", functionService.getFunctionsHierarchies(user.getFunctions()));
-            //logger.info("处理完成");
-            //System.out.println("处理完成--systemout");
-
             userJson.put("roleString",staffService.getStaffRoleStringByStaffId(staff.getId()));
 
             String digest = HmacSHA256Util.digest(staff.getUsername(), staff.getPassword());
@@ -94,6 +88,28 @@ public class AuthController extends BaseController {
             response.status = ResponseType.FAILURE;
             response.message = e.getMessage();
         }
+        return response;
+    }
+
+    @RequestMapping(value = "/home/resetPassword")
+    public Response resetPassword(Request request)
+    {
+        Response response = new Response();
+
+        try
+        {
+            response.status = ResponseType.SUCCESS;
+            staffService.resetPassword(request.getParams());
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
         return response;
     }
 }

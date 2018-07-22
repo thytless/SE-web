@@ -10,6 +10,7 @@ import com.seweb.backend.framework.utils.json.JsonUtil;
 import com.seweb.backend.framework.utils.string.StringUtil;
 import com.seweb.backend.mapper.StaffRoleMapper;
 import com.seweb.backend.repository.StaffRepository;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -155,6 +156,25 @@ public class StaffService extends UserService<Staff> {
     }
 
 
-
+    public void resetPassword(JSONObject params) throws Exception {
+        Staff staff = staffRepository.findByUsername(params.getString("username"));
+        if(staff == null) {
+            throw new Exception("Username not exist");
+        }
+        String phoneNumber = params.getString("phoneNumber");
+        String email = params.getString("email");
+        String truename = params.getString("truename");
+        String identification = params.getString("identification");
+        if(phoneNumber == null || !phoneNumber.equals(staff.getPhoneNumber()))
+            throw new Exception("Wrong phone number");
+        if(email == null || !email.equals(staff.getEmail()))
+            throw new Exception("Wrong email");
+        if(truename == null || !truename.equals(staff.getTruename()))
+            throw new Exception("Wrong truename");
+        if(identification == null || !identification.equals(staff.getIdentification()))
+            throw new Exception("Wrong identification");
+        String newPassword = MD5Util.encrypt(params.getString("password"));
+        staff.setPassword(newPassword);
+    }
 
 }
