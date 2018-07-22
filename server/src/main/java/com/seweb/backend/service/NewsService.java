@@ -38,9 +38,9 @@ public class NewsService extends TextService<News> {
         String content = params.getString("content");
         if(content != null) parent.setContent(content);
         String author = params.getString("author");
-        if(author != null) parent.setName(author);
+        if(author != null) parent.setAuthor(author);
         String picture = params.getString("picture");
-        if(picture != null) parent.setContent(picture);
+        if(picture != null) parent.setPicture(picture);
 
     }
 
