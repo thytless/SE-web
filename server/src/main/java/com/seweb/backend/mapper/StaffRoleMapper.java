@@ -17,5 +17,8 @@ public interface StaffRoleMapper {
     void addStaffRole(@Param("userId")String userId,@Param("roleId")String roleId);
 
     @Delete("DELETE FROM tbl_sys_staff_role WHERE staff_id = #{userId}")
-    void deleteStaffRole(@Param("userId")String userId);
+    void deleteAllStaffRole(@Param("userId")String userId);
+
+    @Delete("DELETE FROM tbl_sys_staff_role WHERE staff_id = #{userId} AND role_id = #{roleId}")
+    void deleteStaffRole(@Param("userId")String userId, @Param("roleId")String roleId);
 }
