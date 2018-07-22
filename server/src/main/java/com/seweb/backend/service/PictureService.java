@@ -20,6 +20,8 @@ public class PictureService extends BaseService<Picture>{
     @Autowired
     private PictureRepository pictureRepository;
 
+    private static final String magicString = "0010";
+
 
     public JSONArray queryAllPicture(){
         //一键查询，返回所有
@@ -33,10 +35,23 @@ public class PictureService extends BaseService<Picture>{
         return JSON.parseObject(JSON.toJSONString(pictureRepository.findById(id)));
     }
 
+    public JSONArray queryCertificate() {
+        return JsonUtil.toJSONArray(pictureRepository.findByCode(magicString));
+    }
+
     public void addPicture(String fileName) {
         //params包括name、content
         Picture picture = new Picture();
         picture.setName(fileName);
+        picture.setId(UUID.randomUUID().toString());
+        this.saveEntity(picture);
+    }
+
+    public void addCertificate(String fileName) {
+        //params包括name、content
+        Picture picture = new Picture();
+        picture.setName(fileName);
+        picture.setCode(magicString);
         picture.setId(UUID.randomUUID().toString());
         this.saveEntity(picture);
     }
@@ -64,10 +79,5 @@ public class PictureService extends BaseService<Picture>{
 
         this.updateEntity(picture);
 
-    }
-    public String findID(String fileName){
-        String id=new String();
-
-        return id;
     }
 }

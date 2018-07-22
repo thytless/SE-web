@@ -30,5 +30,4 @@ public class CaseService extends TextService<Case>{
     public Case toObject(JSONObject params) {
         return JSONObject.toJavaObject(params, Case.class);
     }
-
 }

@@ -1,6 +1,7 @@
 package com.seweb.backend.web;
 
 import com.seweb.backend.domain.Picture;
+import com.seweb.backend.framework.core.web.Request;
 import com.seweb.backend.framework.core.web.Response;
 import com.seweb.backend.framework.core.web.ResponseType;
 import com.seweb.backend.service.PictureService;
@@ -96,14 +97,101 @@ public class FileController {
         }
         return null;
     }
+
     @RequestMapping("/deleteFile/{name}")
-    public void deleteFile(@PathVariable("name")String name) {
+    public void deleteFile(@PathVariable("name")String name) throws Exception{
         if(name == null)
             System.out.println("请输入文件名");
 
         //TODO：考虑文件不存在的情况
-        File targetFile=new File(filePath,name);
+        File targetFile= null;
+        if (name != null) {
+            targetFile = new File(filePath,name);
+        }
+        else {
+            throw new Exception("Request file not exist.");
+        }
         boolean isDelete = targetFile.delete();
         pictureService.deletePicture(name);
+    }
+
+    @RequestMapping("/home/certificate")
+    public Response queryPictureByCode(Request request) {
+        Response response = new Response();
+
+        try {
+            response.data = pictureService.queryCertificate();
+            response.status = ResponseType.SUCCESS;
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping("/home/certificate/query")
+    public Response queryPictureById(Request request) {
+        Response response = new Response();
+
+        try {
+            response.data = pictureService.queryPictureById(request.getParams());
+            response.status = ResponseType.SUCCESS;
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping("/critical/certificate/delete")
+    public Response deleteCertificate(Request request) {
+        Response response = new Response();
+
+        try {
+            pictureService.deletePicture(request.getParams().getString("name"));
+            response.status = ResponseType.SUCCESS;
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
+    }
+
+    @RequestMapping("/critical/certificate/add")
+    public Response addCertificate(Request request) {
+        Response response = new Response();
+
+        try {
+            pictureService.addCertificate(request.getParams().getString("name"));
+            response.status = ResponseType.SUCCESS;
+            response.message = "";
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+
+            response.status = ResponseType.FAILURE;
+            response.message = e.getMessage();
+        }
+
+        return response;
     }
 }

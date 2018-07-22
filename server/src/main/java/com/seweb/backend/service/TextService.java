@@ -3,10 +3,10 @@ package com.seweb.backend.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.seweb.backend.domain.Notice;
 import com.seweb.backend.domain.Text;
 import com.seweb.backend.framework.utils.date.DateUtil;
 import com.seweb.backend.framework.utils.json.JsonUtil;
+import com.seweb.backend.framework.utils.string.StringUtil;
 import com.seweb.backend.mapper.NoticeMapper;
 import com.seweb.backend.repository.TextRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ import java.util.UUID;
 
 public class TextService<T extends Text> extends BaseService<T>{
 
-    public TextRepository<T> textRepository;
+    private TextRepository<T> textRepository;
 
     @Autowired
-    public NoticeMapper noticeMapper;
+    private NoticeMapper noticeMapper;
 
     @Autowired
     public void setTextRepository(TextRepository<T> textRepository) {
@@ -60,12 +60,12 @@ public class TextService<T extends Text> extends BaseService<T>{
         if(text.getStatus().equals(ST_UNAUTH))
             this.deleteEntity(id);
         else {
-            JSONObject draftJson = JSON.parseObject(JSON.toJSONString(text));
-            T draft = toObject(draftJson);
-            draft.setId(UUID.randomUUID().toString());
-            draft.setParent(id);
-            draft.setStatus(ST_DEPRE);
-            this.saveEntity(draft,userId);
+            T copy = toObject(params);
+            this.handleEdit(copy,text);
+            copy.setId(UUID.randomUUID().toString());
+            copy.setParent(id);
+            copy.setStatus(ST_DEPRE);
+            this.saveEntity(copy,userId);
         }
     }
 
@@ -79,17 +79,18 @@ public class TextService<T extends Text> extends BaseService<T>{
     public void edit(JSONObject params, String alteredUserId) {
         String id = params.getString("id");
         T text = textRepository.findById(id).get();
-        T draft = toObject(params);
         if(text.getStatus().equals(ST_UNAUTH)){
-            if(draft.getName() != null) text.setName(draft.getName());
-            if(draft.getContent() != null) text.setContent(draft.getContent());
+            this.handleEdit(text,params);
             this.updateEntity(text, alteredUserId);
         }
         else{
-            draft.setId(UUID.randomUUID().toString());
-            draft.setParent(id);
-            draft.setStatus(ST_UNAUTH);
-            this.saveEntity(draft, alteredUserId);
+            T copy = toObject(params);
+            this.handleEdit(copy,text);
+            this.handleEdit(copy,params);
+            copy.setId(UUID.randomUUID().toString());
+            copy.setParent(id);
+            copy.setStatus(ST_UNAUTH);
+            this.saveEntity(copy, alteredUserId);
         }
     }
 
@@ -133,45 +134,36 @@ public class TextService<T extends Text> extends BaseService<T>{
         String parentId = text.getParent();
         String status = text.getStatus();
 
-        /* TODO: Send Notice */
-        if("accept".equals(reply)) {
-            if(parentId == null) {/* ADD */
-                text.setStatus(ST_AUTH);
-            }
-            else {
-                if(status.equals(ST_UNAUTH)) {/* CHANGE */
-                    T parent = textRepository.findById(parentId).get();
-                    this.handleEdit(parent,text);
-                    this.updateEntity(parent,text.getCreatedUserId());
-                    textRepository.deleteById(text.getId());
-
-                    /*text.setCreatedTime(parent.getCreatedTime());
-                    text.setCreatedUserId(parent.getCreatedUserId());
-                    textRepository.deleteById(parentId);
-                    text.setId(parentId);
+        switch (reply) {
+            case "accept":
+                if (parentId == null) {/* ADD */
                     text.setStatus(ST_AUTH);
-                    text.setParent(null);
-                    this.updateEntity(text,text.getCreatedUserId());*/
-
+                } else {
+                    switch (status) {
+                        case ST_UNAUTH: /* CHANGE */
+                            T parent = textRepository.findById(parentId).get();
+                            this.handleEdit(parent, text);
+                            this.updateEntity(parent, text.getCreatedUserId());
+                            textRepository.deleteById(text.getId());
+                            break;
+                        case ST_DEPRE: /* DELETE */
+                            textRepository.deleteById(params.getString("id"));
+                            textRepository.deleteById(parentId);
+                            break;
+                        default:
+                            throw new Exception("Undefined text status");
+                    }
                 }
-                else if(status.equals(ST_DEPRE)){/* DELETE */
+                addAcceptNotice(text.getCreatedUserId(), text.getName(), DateUtil.formatDateTime(new Date()));
+                break;
+            case "refuse":
+                if (status.equals(ST_DEPRE)) {
                     textRepository.deleteById(params.getString("id"));
-                    textRepository.deleteById(parentId);
                 }
-                else {
-                    throw new Exception("Undefined text status");
-                }
-            }
-            addAcceptNotice(text.getCreatedUserId(),text.getName(),DateUtil.formatDateTime(new Date()));
-        }
-        else if("refuse".equals(reply)) {
-            if(status.equals(ST_DEPRE)) {
-                textRepository.deleteById(params.getString("id"));
-            }
-            addRefuseNotice(text.getCreatedUserId(),text.getName(),DateUtil.formatDateTime(new Date()),params.getString("info"));
-        }
-        else {
-            throw new Exception("Undefined reply");
+                addRefuseNotice(text.getCreatedUserId(), text.getName(), DateUtil.formatDateTime(new Date()), params.getString("info"));
+                break;
+            default:
+                throw new Exception("Undefined reply");
         }
         return true;
     }
@@ -210,8 +202,15 @@ public class TextService<T extends Text> extends BaseService<T>{
         addNotice(targetUserId,AUTH_REFUSE_STRING,string,time);
     }
 
-    private void handleEdit(T parent, T text) {
+    public void handleEdit(T parent, T text) {
         parent.setName(text.getName());
         parent.setContent(text.getContent());
+    }
+
+    public void handleEdit(T parent, JSONObject params) {
+        String name = params.getString("name");
+        if(name != null) parent.setName(name);
+        String content = params.getString("content");
+        if(content != null) parent.setContent(content);
     }
 }
