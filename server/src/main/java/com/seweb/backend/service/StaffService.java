@@ -7,6 +7,7 @@ import com.seweb.backend.domain.Role;
 import com.seweb.backend.domain.Staff;
 import com.seweb.backend.framework.utils.encryption.MD5Util;
 import com.seweb.backend.framework.utils.json.JsonUtil;
+import com.seweb.backend.framework.utils.string.StringUtil;
 import com.seweb.backend.mapper.StaffRoleMapper;
 import com.seweb.backend.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,28 +88,36 @@ public class StaffService extends UserService<Staff> {
     public void updateStaffRoles(JSONObject params, String staffId) throws Exception{
 
         String roleString = params.getString("roleString");
+        List<String> staffRoleList = staffRoleMapper.getStaffRole(staffId);
         if(roleString != null)
         {
             for(int i = 1; i < roleString.length(); i++)
             {
-                if(roleString.charAt(i) == '1'){
-                    String hql = "FROM Role role WHERE role.code = :roleCode";
-                    HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-                    paramsMap.put("roleCode",i+"");
+                String hql = "FROM Role role WHERE role.code = :roleCode";
+                HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+                paramsMap.put("roleCode",i+"");
 
-                    List<Role> roleList = roleRepository.executeHql(hql,paramsMap);
+                List<Role> roleList = roleRepository.executeHql(hql,paramsMap);
 
-                    if(roleList.size() == 0){
-                        throw new Exception("Nonexistent roleCode "+i);
-                    }
-                    else{
-                        String roleId = roleList.get(0).getId();
-                        List<String> staffRoleList = staffRoleMapper.getStaffRole(staffId);
-                        //if(staffRoleList != null && !staffRoleList.contains(roleId))
-
-                            staffRoleMapper.addStaffRole(staffId,roleId);
+                if(roleList.size() == 0){
+                    throw new Exception("Nonexistent roleCode "+i);
+                }
+                else{
+                    String roleId = roleList.get(0).getId();
+                    switch (roleString.charAt(i)) {
+                        case '1':
+                            if (!StringUtil.hasString(staffRoleList, roleId))
+                                staffRoleMapper.addStaffRole(staffId, roleId);
+                            break;
+                        case '0':
+                            if (StringUtil.hasString(staffRoleList, roleId))
+                                staffRoleMapper.deleteStaffRole(staffId, roleId);
+                            break;
+                        default:
+                            throw new Exception("Invalid Bit");
                     }
                 }
+
             }
         }
     }
@@ -144,6 +153,8 @@ public class StaffService extends UserService<Staff> {
         staff.setStatus(ST_AUTH);
         this.updateEntity(staff);
     }
+
+
 
 
 }
