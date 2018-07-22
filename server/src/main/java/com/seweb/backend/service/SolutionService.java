@@ -34,7 +34,6 @@ public class SolutionService extends TextService<Solution>{
 
     @Override
     public void handleEdit(Solution parent, JSONObject params) {
-        System.out.println("Solution");
         String name = params.getString("name");
         if(name != null) parent.setName(name);
         String content = params.getString("content");

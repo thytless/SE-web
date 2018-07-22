@@ -157,9 +157,7 @@ public class TextService<T extends Text> extends BaseService<T>{
                 addAcceptNotice(text.getCreatedUserId(), text.getName(), DateUtil.formatDateTime(new Date()));
                 break;
             case "refuse":
-                if (status.equals(ST_DEPRE)) {
-                    textRepository.deleteById(params.getString("id"));
-                }
+                textRepository.deleteById(params.getString("id"));
                 addRefuseNotice(text.getCreatedUserId(), text.getName(), DateUtil.formatDateTime(new Date()), params.getString("info"));
                 break;
             default:
