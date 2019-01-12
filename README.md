@@ -1,2 +1,2 @@
 # SE-web
-A spring-based website,front-end &amp; back-end included.
+网站服务于访问的网站游客、管理网站内容的各类管理员及管理权限的超级管理员。后端基于Spring框架，使用Mysql作为数据库，应用Shiro实现了不同角色的权限管理。前端主要基于react。
